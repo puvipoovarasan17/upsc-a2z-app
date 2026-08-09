@@ -3,144 +3,137 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-  <title>UPSC Pro LMS 3.0</title>
+  <title>UPSC Pro LMS 5.0 (Mega Release)</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0b0f19; --card: rgba(30, 41, 59, 0.7); --card-br: rgba(255,255,255,0.1);
-      --tx: #f8fafc; --ac: #0ea5e9; --suc: #10b981; --war: #f59e0b;
-      --gr: linear-gradient(135deg, #0ea5e9, #6366f1);
+      --bg: #0f172a; --card: rgba(30, 41, 59, 0.9); --card-br: rgba(255,255,255,0.1);
+      --tx: #f8fafc; --ac: #3b82f6; --suc: #10b981; --war: #f59e0b;
+      --gr: linear-gradient(135deg, #3b82f6, #8b5cf6);
     }
     * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans', sans-serif; }
     body { background:var(--bg); color:var(--tx); padding-bottom:80px; }
     
-    .glass { background: var(--card); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--card-br); border-radius: 16px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); }
+    .glass { background: var(--card); border: 1px solid var(--card-br); border-radius: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); }
     
-    header { padding: 25px 20px; text-align: center; border-bottom: 1px solid var(--card-br); }
-    header h1 { font-size: 26px; background: var(--gr); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    header p { color: #94a3b8; margin-top: 5px; font-weight: 300; font-size:13px;}
+    header { padding: 25px 20px; text-align: center; border-bottom: 1px solid var(--card-br); background:rgba(15, 23, 42, 0.95); position:sticky; top:0; z-index:50;}
+    header h1 { font-size: 26px; font-weight:800; color:#fff; }
+    header h1 span { background: var(--gr); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     
-    .bnav { position:fixed; bottom:0; width:100%; height:70px; background:rgba(15, 23, 42, 0.95); backdrop-filter:blur(10px); display:flex; border-top:1px solid var(--card-br); z-index:100;}
-    .ni { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#64748b; font-size:11px; font-weight:600; cursor:pointer; transition:0.3s;}
-    .ni.active { color:var(--ac); transform:translateY(-3px);}
-    .ni i { font-size: 20px; margin-bottom:4px; font-style:normal;}
+    .page { display:none; padding:15px; max-width: 600px; margin: 0 auto;}
+    .page.active { display:flex; flex-direction:column; gap:15px; animation: fade 0.3s ease; }
+    @keyframes fade { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
     
-    .page { display:none; padding:15px; max-width: 800px; margin: 0 auto;}
-    .page.active { display:flex; flex-direction:column; gap:15px; animation: fade 0.4s ease; }
-    @keyframes fade { from{opacity:0; transform:translateY(15px);} to{opacity:1; transform:translateY(0);} }
+    /* BIG HOME BUTTONS */
+    .big-btn { display:flex; align-items:center; justify-content:space-between; padding:20px; background:var(--card); border:1px solid var(--card-br); border-radius:16px; margin-bottom:15px; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.3); transition:0.2s;}
+    .big-btn:active { transform:scale(0.97); }
+    .bb-icon { font-size:32px; background:rgba(255,255,255,0.05); width:60px; height:60px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-right:15px;}
+    .bb-text h3 { font-size:18px; margin-bottom:4px; color:#fff;}
+    .bb-text p { font-size:13px; color:#94a3b8; line-height:1.4;}
     
-    .card { padding:20px; }
-    .card h3 { color:var(--tx); margin-bottom:15px; font-size:18px; display:flex; align-items:center; gap:8px;}
+    .card { padding:20px; margin-bottom:15px;}
+    .card h3 { color:var(--tx); margin-bottom:15px; font-size:18px;}
     
     .btn { display:inline-block; padding:12px 24px; background:var(--gr); color:#fff; border:none; border-radius:30px; font-weight:600; cursor:pointer; text-align:center; transition:0.3s;}
-    .btn:active { transform:scale(0.95); }
     
     .topic-row { display:flex; justify-content:space-between; align-items:center; padding:15px; background:rgba(0,0,0,0.3); margin-bottom:10px; border-radius:12px; border:1px solid var(--card-br); cursor:pointer;}
-    .topic-row:hover { background:rgba(255,255,255,0.08); }
-    .topic-row.done { border-color:var(--suc); background:rgba(16, 185, 129, 0.15); }
+    .topic-row.done { border-color:var(--suc); background:rgba(16, 185, 129, 0.1); }
     
     .lib-card { display:flex; align-items:center; justify-content:space-between; background:rgba(0,0,0,0.3); border:1px solid var(--card-br); padding:15px; border-radius:12px; margin-bottom:12px;}
-    .lib-ico { font-size:24px; margin-right:15px;}
     
     /* MODALS */
     .overlay-ui { position:fixed; top:0; left:0; width:100%; height:100%; background:var(--bg); z-index:999; display:none; flex-direction:column; animation:slideUp 0.3s ease;}
     @keyframes slideUp { from{transform:translateY(100%);} to{transform:translateY(0);} }
     .r-head { display:flex; justify-content:space-between; align-items:center; padding:15px; background:var(--card); border-bottom:1px solid var(--card-br);}
     .r-head h3 { font-size:16px; margin:0;}
-    .lang-toggle { background:#1e293b; color:#fff; border:1px solid #334155; padding:6px 12px; border-radius:20px; font-size:12px; cursor:pointer;}
+    .lang-toggle { background:#1e293b; color:#fff; border:1px solid #334155; padding:6px 12px; border-radius:20px; font-size:12px; cursor:pointer; font-weight:600;}
     .close-btn { background:none; border:none; color:#ef4444; font-size:26px; cursor:pointer;}
-    .r-body { flex:1; padding:20px; overflow-y:auto; font-size:16px; line-height:1.7; color:#e2e8f0;}
-    .r-foot { padding:20px; background:var(--card); border-top:1px solid var(--card-br); text-align:center;}
+    .r-body { flex:1; padding:20px; overflow-y:auto; font-size:16px; line-height:1.7; color:#e2e8f0; padding-bottom:100px;}
+    .r-foot { position:fixed; bottom:0; width:100%; padding:15px; background:var(--card); border-top:1px solid var(--card-br); text-align:center;}
     
     .opt { padding:15px; background:rgba(0,0,0,0.3); border:1px solid var(--card-br); border-radius:12px; margin-bottom:12px; cursor:pointer;}
     .opt.correct { background:var(--suc); color:#fff; border-color:var(--suc);}
     .opt.wrong { background:#ef4444; color:#fff; border-color:#ef4444;}
     
-    .chat-box { flex:1; overflow-y:auto; padding:15px; display:flex; flex-direction:column; gap:10px; border-radius:12px; background:rgba(0,0,0,0.2); border:1px solid var(--card-br);}
-    .msg { padding:12px 16px; border-radius:16px; max-width:85%; line-height:1.5; font-size:14px;}
-    .msg.bot { background:rgba(255,255,255,0.1); color:#cbd5e1; align-self:flex-start; border-bottom-left-radius:4px;}
-    .msg.user { background:var(--ac); color:#fff; align-self:flex-end; border-bottom-right-radius:4px;}
-    .chat-in { display:flex; gap:10px; margin-top:10px;}
-    input[type="text"] { flex:1; padding:14px 20px; border-radius:30px; border:1px solid var(--card-br); background:rgba(0,0,0,0.4); color:#fff; outline:none;}
+    /* ROADMAP TIMELINE */
+    .timeline { position:relative; max-width:100%; margin:10px auto; padding:10px;}
+    .timeline::after { content:''; position:absolute; width:4px; background:rgba(255,255,255,0.1); top:0; bottom:0; left:20px; border-radius:4px;}
+    .tl-cont { padding:10px 10px 10px 40px; position:relative; background:inherit; width:100%; margin-bottom:15px;}
+    .tl-cont::after { content:''; position:absolute; width:16px; height:16px; background:var(--ac); border:4px solid var(--bg); top:15px; left:14px; border-radius:50%; z-index:1;}
+    .tl-box { padding:15px; background:rgba(0,0,0,0.2); border:1px solid var(--card-br); border-radius:12px;}
+    .tl-box h4 { color:var(--suc); margin-bottom:6px; font-size:16px;}
+    .tl-box p { font-size:14px; color:#cbd5e1; line-height:1.5;}
   </style>
 </head>
 <body>
 
-  <header class="glass" style="border-radius:0; border-top:none; border-left:none; border-right:none;">
-    <h1>UPSC Zero-to-Hero</h1>
-    <p>Premium LMS • Master the Syllabus</p>
+  <header class="glass">
+    <h1>UPSC <span>A-Z Master</span></h1>
   </header>
 
   <!-- HOME PAGE -->
   <div id="pg-home" class="page active">
-    <!-- MASTER ROADMAP -->
-    <div class="glass card" style="text-align:center; padding:25px; background:linear-gradient(135deg, rgba(14,165,233,0.15), rgba(99,102,241,0.15)); border:1px solid var(--ac);">
-      <h3 style="color:var(--tx); justify-content:center;">Confused How To Start?</h3>
-      <p style="color:#94a3b8; font-size:13px; margin-bottom:20px;">Read the master strategy guide before opening the syllabus.</p>
-      <button class="btn" style="width:100%; font-size:16px;" onclick="openRoadmap()">🗺️ Start Here: Master Roadmap</button>
+    
+    <div style="text-align:center; padding:10px 0 20px 0;">
+      <p style="color:#94a3b8; font-size:14px;">Welcome! Choose an option to begin.</p>
     </div>
 
-    <!-- QUICK STATS -->
-    <div class="glass card" style="display:flex; justify-content:space-around; text-align:center; padding:15px;">
-      <div>
-        <h2 style="font-size:32px; color:var(--suc);" id="h-done">0</h2>
-        <p style="font-size:11px; color:#94a3b8; font-weight:600;">TOPICS DONE</p>
+    <!-- BUTTON 1 -->
+    <div class="big-btn" onclick="openRoadmap()" style="border-left:4px solid #3b82f6;">
+      <div style="display:flex; align-items:center;">
+        <div class="bb-icon">🗺️</div>
+        <div class="bb-text">
+          <h3>Master Roadmap</h3>
+          <p>How to start, read & revise.</p>
+        </div>
       </div>
-      <div>
-        <h2 style="font-size:32px; color:var(--war);">11</h2>
-        <p style="font-size:11px; color:#94a3b8; font-weight:600;">TOTAL TOPICS</p>
+      <div style="font-size:24px; color:#64748b;">→</div>
+    </div>
+
+    <!-- BUTTON 2 -->
+    <div class="big-btn" onclick="goPage('pg-schedule')" style="border-left:4px solid #10b981;">
+      <div style="display:flex; align-items:center;">
+        <div class="bb-icon">📖</div>
+        <div class="bb-text">
+          <h3>Syllabus & Tests</h3>
+          <p>Subject-wise notes & mock tests.</p>
+        </div>
       </div>
+      <div style="font-size:24px; color:#64748b;">→</div>
+    </div>
+
+    <!-- BUTTON 3 -->
+    <div class="big-btn" onclick="goPage('pg-lib')" style="border-left:4px solid #f59e0b;">
+      <div style="display:flex; align-items:center;">
+        <div class="bb-icon">📚</div>
+        <div class="bb-text">
+          <h3>Free PDF Library</h3>
+          <p>Official PYQs & NCERT Books.</p>
+        </div>
+      </div>
+      <div style="font-size:24px; color:#64748b;">→</div>
     </div>
     
-    <div class="glass card">
-      <h3>🚀 Quick Access</h3>
-      <div class="topic-row" style="background:var(--gr); border:none;" onclick="goPage('pg-schedule')">
-        <span style="font-weight:600;">📖 Subject-Wise Syllabus</span>
-        <span style="font-size:20px;">→</span>
-      </div>
-      <div class="topic-row" onclick="goPage('pg-lib')">
-        <span>📚 Free PDFs & PYQs</span>
-      </div>
+    <div class="glass card" style="text-align:center; margin-top:20px;">
+      <p style="font-size:12px; color:#94a3b8; font-weight:600; margin-bottom:5px;">YOUR PROGRESS</p>
+      <h2 style="font-size:32px; color:var(--suc);" id="h-done">0 / 11 Mastered</h2>
     </div>
+
   </div>
 
-  <!-- SYLLABUS PAGE (SUBJECT-WISE) -->
+  <!-- SYLLABUS PAGE -->
   <div id="pg-schedule" class="page">
-    <div class="glass card" style="padding:15px; text-align:center;">
-      <p style="color:var(--ac); font-weight:600; font-size:14px;">Select a subject to read notes & take the Daily Test.</p>
-    </div>
+    <button class="btn" style="margin-bottom:15px; background:rgba(255,255,255,0.1);" onclick="goPage('pg-home')">← Back to Home</button>
     <div id="sch-content"></div>
   </div>
 
   <!-- PDF LIBRARY PAGE -->
   <div id="pg-lib" class="page">
+    <button class="btn" style="margin-bottom:15px; background:rgba(255,255,255,0.1);" onclick="goPage('pg-home')">← Back to Home</button>
     <div class="glass card">
       <h3 style="color:var(--war);">📚 Free PDF Library</h3>
-      <p style="font-size:13px; color:#94a3b8; margin-bottom:15px;">Direct links to official UPSC PYQs and free NCERTs.</p>
       <div id="lib-content"></div>
     </div>
-  </div>
-
-  <!-- AI MENTOR PAGE (SMART TANGLISH) -->
-  <div id="pg-ai" class="page">
-    <div class="glass card" style="height:calc(100vh - 160px); display:flex; flex-direction:column; padding:15px;">
-      <h3 style="margin-bottom:10px;">🤖 Smart UPSC Mentor</h3>
-      <div class="chat-box" id="cbx">
-        <div class="msg bot">Vanakkam! I am your advanced AI Mentor. Ask me anything in English or Tanglish! (e.g. "eppadi start pandrathu", "history book", "pyq pdf enga irukku")</div>
-      </div>
-      <div class="chat-in">
-        <input type="text" id="ai-in" placeholder="Ask your doubt..." onkeypress="if(event.key==='Enter')sendAI()">
-        <button class="btn" style="padding:10px 20px;" onclick="sendAI()">Send</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- BOTTOM NAV -->
-  <div class="bnav">
-    <div class="ni active" id="nav-home" onclick="goPage('pg-home')"><i>🏠</i>Home</div>
-    <div class="ni" id="nav-schedule" onclick="goPage('pg-schedule')"><i>📖</i>Syllabus</div>
-    <div class="ni" id="nav-lib" onclick="goPage('pg-lib')"><i>📚</i>Library</div>
-    <div class="ni" id="nav-ai" onclick="goPage('pg-ai')"><i>🤖</i>Mentor</div>
   </div>
 
   <!-- READER & TEST MODAL OVERLAY -->
@@ -152,12 +145,16 @@
         <button class="close-btn" onclick="closeReader()">×</button>
       </div>
     </div>
+    
+    <!-- NOTES VIEW -->
     <div id="view-notes" style="display:flex; flex-direction:column; height:100%;">
       <div class="r-body" id="r-text"></div>
       <div class="r-foot">
-        <button class="btn" style="width:100%; font-size:16px;" onclick="startTest()">Take Daily Test →</button>
+        <button class="btn" style="width:100%; font-size:16px; padding:15px;" onclick="startTest()">Take Topic Test →</button>
       </div>
     </div>
+    
+    <!-- BILINGUAL MOCK TEST VIEW -->
     <div id="view-test" style="display:none; flex-direction:column; height:100%;">
       <div class="r-body">
         <h4 style="color:var(--ac); margin-bottom:15px;" id="qt-counter">Question 1</h4>
@@ -172,56 +169,69 @@
   <div id="roadmap-ui" class="overlay-ui">
     <div class="r-head">
       <h3>🗺️ Master Roadmap</h3>
-      <button class="close-btn" onclick="closeRoadmap()">×</button>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <button class="lang-toggle" onclick="toggleRmLang()" id="rm-btn-lang">A / அ (TA)</button>
+        <button class="close-btn" onclick="closeRoadmap()">×</button>
+      </div>
     </div>
     <div class="r-body">
-      <p style="color:var(--suc); font-weight:600; margin-bottom:15px;">Step 1: The Foundation (Months 1-3)</p>
-      <p>Read Class 6-12 NCERTs like a storybook. Do not make notes yet. Read The Hindu daily.</p>
-      <br><p style="color:var(--ac); font-weight:600; margin-bottom:15px;">Step 2: Core Subjects (Months 4-8)</p>
-      <p>Start standard books like Laxmikanth for Polity. Begin making short notes.</p>
-      <br><p style="color:var(--war); font-weight:600; margin-bottom:15px;">Step 3: Mains & Optional (Months 9-10)</p>
-      <p>Complete Optional subject. Write 2 Mains answers daily.</p>
-      <br><p style="color:#ef4444; font-weight:600; margin-bottom:15px;">Step 4: Prelims Mode (Months 11-12)</p>
-      <p>Stop all Mains prep. Focus 100% on Prelims MCQs and CSAT.</p>
+      <div class="timeline" id="rm-content"></div>
     </div>
   </div>
 
   <script>
-    var SUBS_MAP = {"polity": {"title": "\ud83c\udfdb\ufe0f Indian Polity & Governance", "topics": ["ncert_pol", "std_pol", "mains_gs2"]}, "history": {"title": "\ud83d\udcdc History & Art", "topics": ["ncert_his", "std_mod_his", "std_art"]}, "geography": {"title": "\ud83c\udf0d Geography & Environment", "topics": ["ncert_geo", "std_geo", "std_env"]}, "economy": {"title": "\ud83d\udcc8 Indian Economy", "topics": ["ncert_eco", "std_eco"]}};
-    var TOPICS = {"ncert_pol": {"title": "NCERT Polity (Class 9-12)", "en": "<b>What is a Constitution?</b><br>A constitution is a body of fundamental principles...<br><br><i>Read this completely before taking the Daily Test!</i>", "ta": "<b>\u0b85\u0bb0\u0b9a\u0bbf\u0baf\u0bb2\u0bae\u0bc8\u0baa\u0bcd\u0baa\u0bc1 \u0b8e\u0ba9\u0bcd\u0bb1\u0bbe\u0bb2\u0bcd \u0b8e\u0ba9\u0bcd\u0ba9?</b><br>\u0b92\u0bb0\u0bc1 \u0ba8\u0bbe\u0b9f\u0bcd\u0b9f\u0bc8 \u0ba8\u0bbf\u0bb0\u0bcd\u0bb5\u0b95\u0bbf\u0baa\u0bcd\u0baa\u0ba4\u0bb1\u0bcd\u0b95\u0bbe\u0ba9 \u0b85\u0b9f\u0bbf\u0baa\u0bcd\u0baa\u0b9f\u0bc8 \u0bb5\u0bbf\u0ba4\u0bbf\u0b95\u0bb3\u0bcd...<br><br><i>\u0ba4\u0bc7\u0bb0\u0bcd\u0bb5\u0bc1\u0b95\u0bcd\u0b95\u0bc1 \u0bae\u0bc1\u0ba9\u0bcd \u0baa\u0b9f\u0bbf\u0b95\u0bcd\u0b95\u0bb5\u0bc1\u0bae\u0bcd!</i>"}, "std_pol": {"title": "Indian Polity (Laxmikanth)", "en": "<b>Fundamental Rights</b><br>Part III of the Constitution (Articles 12-35). Highly important for Prelims.", "ta": "<b>\u0b85\u0b9f\u0bbf\u0baa\u0bcd\u0baa\u0b9f\u0bc8 \u0b89\u0bb0\u0bbf\u0bae\u0bc8\u0b95\u0bb3\u0bcd</b><br>\u0baa\u0b95\u0bc1\u0ba4\u0bbf III (\u0baa\u0bbf\u0bb0\u0bbf\u0bb5\u0bc1\u0b95\u0bb3\u0bcd 12-35). \u0baa\u0bbf\u0bb0\u0bbf\u0bb2\u0bbf\u0bae\u0bcd\u0bb8\u0bc1\u0b95\u0bcd\u0b95\u0bc1 \u0bae\u0bbf\u0b95\u0bb5\u0bc1\u0bae\u0bcd \u0bae\u0bc1\u0b95\u0bcd\u0b95\u0bbf\u0baf\u0bae\u0bcd."}, "mains_gs2": {"title": "GS2: Governance & IR", "en": "<b>International Relations</b><br>Focus on India's neighborhood policy and bilateral relations.", "ta": "<b>\u0b9a\u0bb0\u0bcd\u0bb5\u0ba4\u0bc7\u0b9a \u0b89\u0bb1\u0bb5\u0bc1\u0b95\u0bb3\u0bcd</b><br>\u0b87\u0ba8\u0bcd\u0ba4\u0bbf\u0baf\u0bbe\u0bb5\u0bbf\u0ba9\u0bcd \u0b85\u0ba3\u0bcd\u0b9f\u0bc8 \u0ba8\u0bbe\u0b9f\u0bcd\u0b9f\u0bc1 \u0b95\u0bca\u0bb3\u0bcd\u0b95\u0bc8\u0baf\u0bbf\u0bb2\u0bcd \u0b95\u0bb5\u0ba9\u0bae\u0bcd \u0b9a\u0bc6\u0bb2\u0bc1\u0ba4\u0bcd\u0ba4\u0bc1\u0b99\u0bcd\u0b95\u0bb3\u0bcd."}, "ncert_his": {"title": "NCERT History (Class 6-12)", "en": "<b>The Harappan Civilization</b><br>Flourished around 2500 BCE. Key features include Urban Planning.", "ta": "<b>\u0bb9\u0bb0\u0baa\u0bcd\u0baa\u0bbe \u0ba8\u0bbe\u0b95\u0bb0\u0bbf\u0b95\u0bae\u0bcd</b><br>\u0bae\u0bc1\u0b95\u0bcd\u0b95\u0bbf\u0baf \u0b85\u0bae\u0bcd\u0b9a\u0b99\u0bcd\u0b95\u0bb3\u0bcd: \u0ba8\u0b95\u0bb0\u0bae\u0bc8\u0baa\u0bcd\u0baa\u0bc1, \u0bb5\u0b9f\u0bbf\u0b95\u0bbe\u0bb2\u0bcd \u0b85\u0bae\u0bc8\u0baa\u0bcd\u0baa\u0bc1."}, "std_mod_his": {"title": "Modern History (Spectrum)", "en": "<b>Revolt of 1857</b><br>Also known as the First War of Independence.", "ta": "<b>1857 \u0baa\u0bc6\u0bb0\u0bc1\u0bae\u0bcd \u0baa\u0bc1\u0bb0\u0b9f\u0bcd\u0b9a\u0bbf</b><br>\u0bae\u0bc1\u0ba4\u0bb2\u0bcd \u0b9a\u0bc1\u0ba4\u0ba8\u0bcd\u0ba4\u0bbf\u0bb0\u0baa\u0bcd \u0baa\u0bcb\u0bb0\u0bcd \u0b8e\u0ba9\u0bcd\u0bb1\u0bc1 \u0b85\u0bb4\u0bc8\u0b95\u0bcd\u0b95\u0baa\u0bcd\u0baa\u0b9f\u0bc1\u0b95\u0bbf\u0bb1\u0ba4\u0bc1."}, "std_art": {"title": "Art & Culture", "en": "<b>Temple Architecture</b><br>Nagara, Dravida, and Vesara styles.", "ta": "<b>\u0b95\u0bcb\u0baf\u0bbf\u0bb2\u0bcd \u0b95\u0b9f\u0bcd\u0b9f\u0bbf\u0b9f\u0b95\u0bcd\u0b95\u0bb2\u0bc8</b><br>\u0ba8\u0b95\u0bb0\u0bbe, \u0ba4\u0bbf\u0bb0\u0bbe\u0bb5\u0bbf\u0b9f, \u0bae\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bcd \u0bb5\u0bc7\u0b9a\u0bb0\u0bbe \u0baa\u0bbe\u0ba3\u0bbf\u0b95\u0bb3\u0bcd."}, "ncert_geo": {"title": "NCERT Geo (Class 6-12)", "en": "<b>Structure of the Earth</b><br>Crust, Mantle, Core.", "ta": "<b>\u0baa\u0bc2\u0bae\u0bbf\u0baf\u0bbf\u0ba9\u0bcd \u0b95\u0b9f\u0bcd\u0b9f\u0bae\u0bc8\u0baa\u0bcd\u0baa\u0bc1</b><br>\u0bae\u0bc7\u0bb2\u0bcb\u0b9f\u0bc1, \u0bae\u0bc2\u0b9f\u0b95\u0bae\u0bcd, \u0b95\u0bb0\u0bc1."}, "std_geo": {"title": "Advanced Geography", "en": "<b>Monsoon System</b><br>The Indian monsoon is driven by the differential heating of land and water.", "ta": "<b>\u0baa\u0bb0\u0bc1\u0bb5\u0bae\u0bb4\u0bc8 \u0b85\u0bae\u0bc8\u0baa\u0bcd\u0baa\u0bc1</b><br>\u0ba8\u0bbf\u0bb2\u0bae\u0bcd \u0bae\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bcd \u0ba8\u0bc0\u0bb0\u0bbf\u0ba9\u0bcd \u0bb5\u0bc7\u0bb1\u0bc1\u0baa\u0b9f\u0bcd\u0b9f \u0bb5\u0bc6\u0baa\u0bcd\u0baa\u0ba4\u0bcd\u0ba4\u0bbe\u0bb2\u0bcd \u0b87\u0baf\u0b95\u0bcd\u0b95\u0baa\u0bcd\u0baa\u0b9f\u0bc1\u0b95\u0bbf\u0bb1\u0ba4\u0bc1."}, "std_env": {"title": "Environment & Ecology", "en": "<b>Biodiversity Hotspots</b><br>India has 4 major hotspots.", "ta": "<b>\u0baa\u0bb2\u0bcd\u0bb2\u0bc1\u0baf\u0bbf\u0bb0\u0bcd \u0baa\u0bc6\u0bb0\u0bc1\u0b95\u0bcd\u0b95 \u0bae\u0bc8\u0baf\u0b99\u0bcd\u0b95\u0bb3\u0bcd</b><br>\u0b87\u0ba8\u0bcd\u0ba4\u0bbf\u0baf\u0bbe\u0bb5\u0bbf\u0bb2\u0bcd 4 \u0bae\u0bc1\u0b95\u0bcd\u0b95\u0bbf\u0baf \u0bae\u0bc8\u0baf\u0b99\u0bcd\u0b95\u0bb3\u0bcd \u0b89\u0bb3\u0bcd\u0bb3\u0ba9."}, "ncert_eco": {"title": "NCERT Economy", "en": "<b>Gross Domestic Product (GDP)</b><br>Total market value of all final goods.", "ta": "<b>\u0bae\u0bca\u0ba4\u0bcd\u0ba4 \u0b89\u0bb3\u0bcd\u0ba8\u0bbe\u0b9f\u0bcd\u0b9f\u0bc1 \u0b89\u0bb1\u0bcd\u0baa\u0ba4\u0bcd\u0ba4\u0bbf (GDP)</b><br>\u0b85\u0ba9\u0bc8\u0ba4\u0bcd\u0ba4\u0bc1 \u0b87\u0bb1\u0bc1\u0ba4\u0bbf\u0baa\u0bcd \u0baa\u0bca\u0bb0\u0bc1\u0b9f\u0bcd\u0b95\u0bb3\u0bbf\u0ba9\u0bcd \u0bae\u0bca\u0ba4\u0bcd\u0ba4 \u0b9a\u0ba8\u0bcd\u0ba4\u0bc8 \u0bae\u0ba4\u0bbf\u0baa\u0bcd\u0baa\u0bc1."}, "std_eco": {"title": "Indian Economy", "en": "<b>Monetary Policy</b><br>Regulated by the RBI to control inflation.", "ta": "<b>\u0baa\u0ba3\u0bb5\u0bbf\u0baf\u0bb2\u0bcd \u0b95\u0bca\u0bb3\u0bcd\u0b95\u0bc8</b><br>\u0baa\u0ba3\u0bb5\u0bc0\u0b95\u0bcd\u0b95\u0ba4\u0bcd\u0ba4\u0bc8\u0b95\u0bcd \u0b95\u0b9f\u0bcd\u0b9f\u0bc1\u0baa\u0bcd\u0baa\u0b9f\u0bc1\u0ba4\u0bcd\u0ba4 RBI \u0b86\u0bb2\u0bcd \u0b95\u0b9f\u0bcd\u0b9f\u0bc1\u0baa\u0bcd\u0baa\u0b9f\u0bc1\u0ba4\u0bcd\u0ba4\u0baa\u0bcd\u0baa\u0b9f\u0bc1\u0b95\u0bbf\u0bb1\u0ba4\u0bc1."}};
-    var QBANK = {"ncert_pol": [{"q": "Which part of the Constitution deals with Fundamental Rights?", "options": ["Part II", "Part III", "Part IV", "Part V"], "ans": 1, "exp": "Part III contains Fundamental Rights."}], "std_pol": [{"q": "Who can suspend Fundamental Rights during an Emergency?", "options": ["Prime Minister", "Supreme Court", "President", "Parliament"], "ans": 2, "exp": "The President can suspend them under Article 359."}], "ncert_his": [{"q": "Which metal was unknown to the Indus Valley people?", "options": ["Copper", "Bronze", "Iron", "Gold"], "ans": 2, "exp": "They did not know about Iron."}], "mains_gs2": [{"q": "Sample Daily Test Question", "options": ["A", "B", "C", "D"], "ans": 0, "exp": "Read the notes carefully."}], "std_mod_his": [{"q": "Sample Daily Test Question", "options": ["A", "B", "C", "D"], "ans": 0, "exp": "Read the notes carefully."}], "std_art": [{"q": "Sample Daily Test Question", "options": ["A", "B", "C", "D"], "ans": 0, "exp": "Read the notes carefully."}], "ncert_geo": [{"q": "Sample Daily Test Question", "options": ["A", "B", "C", "D"], "ans": 0, "exp": "Read the notes carefully."}], "std_geo": [{"q": "Sample Daily Test Question", "options": ["A", "B", "C", "D"], "ans": 0, "exp": "Read the notes carefully."}], "std_env": [{"q": "Sample Daily Test Question", "options": ["A", "B", "C", "D"], "ans": 0, "exp": "Read the notes carefully."}], "ncert_eco": [{"q": "Sample Daily Test Question", "options": ["A", "B", "C", "D"], "ans": 0, "exp": "Read the notes carefully."}], "std_eco": [{"q": "Sample Daily Test Question", "options": ["A", "B", "C", "D"], "ans": 0, "exp": "Read the notes carefully."}]};
-    var LIB = [{"type": "pdf", "title": "UPSC Prelims 2023 GS Paper 1 (Official PDF)", "url": "https://upsc.gov.in/sites/default/files/QP-CSPE-23-GS1-280523.pdf", "desc": "Official UPSC Question Paper"}, {"type": "pdf", "title": "UPSC Prelims 2022 GS Paper 1 (Official PDF)", "url": "https://upsc.gov.in/sites/default/files/QP-CSP-22-GS1-050622.pdf", "desc": "Official UPSC Question Paper"}, {"type": "pdf", "title": "UPSC Prelims 2021 GS Paper 1 (Official PDF)", "url": "https://upsc.gov.in/sites/default/files/QP-CSP-21-GS1-101021.pdf", "desc": "Official UPSC Question Paper"}, {"type": "book", "title": "NCERT Class 11 - Indian Constitution at Work (PDF)", "url": "https://ncert.nic.in/textbook.php?keps2=0-10", "desc": "Official NCERT Book"}, {"type": "book", "title": "NCERT Class 11 - Physical Geography (PDF)", "url": "https://ncert.nic.in/textbook.php?kegy2=0-16", "desc": "Official NCERT Book"}, {"type": "notes", "title": "NIOS Study Material for UPSC", "url": "https://www.nios.ac.in/online-course-material/sr-secondary-courses.aspx", "desc": "Excellent foundation material."}];
+    var SUBS_MAP = {"polity": {"title": "\ud83c\udfdb\ufe0f Indian Polity", "topics": ["ncert_pol", "std_pol", "mains_gs2"]}, "history": {"title": "\ud83d\udcdc History & Art", "topics": ["ncert_his", "std_mod_his", "std_art"]}, "geography": {"title": "\ud83c\udf0d Geography & Env", "topics": ["ncert_geo", "std_geo"]}, "economy": {"title": "\ud83d\udcc8 Indian Economy", "topics": ["ncert_eco", "std_eco", "mains_gs3"]}};
+    var TOPICS = {"ncert_pol": {"title": "NCERT Polity (Class 9-12)", "en": "<b>The Making of the Constitution</b><br>The Constituent Assembly was formed in 1946. It took 2 years, 11 months, and 18 days.<br><br><b>Fundamental Rights (Part III)</b><br>Articles 12 to 35 deal with Fundamental Rights. They are justiciable.", "ta": "<b>\u0b85\u0bb0\u0b9a\u0bbf\u0baf\u0bb2\u0bae\u0bc8\u0baa\u0bcd\u0baa\u0bc1 \u0b89\u0bb0\u0bc1\u0bb5\u0bbe\u0b95\u0bcd\u0b95\u0bae\u0bcd</b><br>\u0b85\u0bb0\u0b9a\u0bbf\u0baf\u0bb2\u0bae\u0bc8\u0baa\u0bcd\u0baa\u0bc1 \u0ba8\u0bbf\u0bb0\u0bcd\u0ba3\u0baf \u0b9a\u0baa\u0bc8 1946 \u0b87\u0bb2\u0bcd \u0b89\u0bb0\u0bc1\u0bb5\u0bbe\u0b95\u0bcd\u0b95\u0baa\u0bcd\u0baa\u0b9f\u0bcd\u0b9f\u0ba4\u0bc1. 2 \u0b86\u0ba3\u0bcd\u0b9f\u0bc1\u0b95\u0bb3\u0bcd, 11 \u0bae\u0bbe\u0ba4\u0b99\u0bcd\u0b95\u0bb3\u0bcd, 18 \u0ba8\u0bbe\u0b9f\u0bcd\u0b95\u0bb3\u0bcd \u0b86\u0ba9\u0ba4\u0bc1.<br><br><b>\u0b85\u0b9f\u0bbf\u0baa\u0bcd\u0baa\u0b9f\u0bc8 \u0b89\u0bb0\u0bbf\u0bae\u0bc8\u0b95\u0bb3\u0bcd (\u0baa\u0b95\u0bc1\u0ba4\u0bbf III)</b><br>\u0baa\u0bbf\u0bb0\u0bbf\u0bb5\u0bc1\u0b95\u0bb3\u0bcd 12 \u0bae\u0bc1\u0ba4\u0bb2\u0bcd 35 \u0bb5\u0bb0\u0bc8. \u0b87\u0bb5\u0bc8 \u0ba8\u0bc0\u0ba4\u0bbf\u0bae\u0ba9\u0bcd\u0bb1\u0ba4\u0bcd\u0ba4\u0bbe\u0bb2\u0bcd \u0ba8\u0bbf\u0bb2\u0bc8\u0ba8\u0bbe\u0b9f\u0bcd\u0b9f\u0b95\u0bcd\u0b95\u0bc2\u0b9f\u0bbf\u0baf\u0bb5\u0bc8."}, "std_pol": {"title": "Indian Polity (Laxmikanth)", "en": "<b>The President (Article 52-62)</b><br>The President is the head of the Indian State. Elected by an electoral college.<br><br><b>Parliament (Article 79-122)</b><br>Consists of the President, the Council of States (Rajya Sabha), and the House of the People (Lok Sabha).", "ta": "<b>\u0b95\u0bc1\u0b9f\u0bbf\u0baf\u0bb0\u0b9a\u0bc1\u0ba4\u0bcd \u0ba4\u0bb2\u0bc8\u0bb5\u0bb0\u0bcd (\u0baa\u0bbf\u0bb0\u0bbf\u0bb5\u0bc1 52-62)</b><br>\u0b95\u0bc1\u0b9f\u0bbf\u0baf\u0bb0\u0b9a\u0bc1\u0ba4\u0bcd \u0ba4\u0bb2\u0bc8\u0bb5\u0bb0\u0bcd \u0b87\u0ba8\u0bcd\u0ba4\u0bbf\u0baf \u0b85\u0bb0\u0b9a\u0bbf\u0ba9\u0bcd \u0ba4\u0bb2\u0bc8\u0bb5\u0bb0\u0bcd \u0b86\u0bb5\u0bbe\u0bb0\u0bcd. \u0ba4\u0bc7\u0bb0\u0bcd\u0ba4\u0bb2\u0bcd \u0b95\u0bc1\u0bb4\u0bc1 \u0bae\u0bc2\u0bb2\u0bae\u0bcd \u0ba4\u0bc7\u0bb0\u0bcd\u0ba8\u0bcd\u0ba4\u0bc6\u0b9f\u0bc1\u0b95\u0bcd\u0b95\u0baa\u0bcd\u0baa\u0b9f\u0bc1\u0b95\u0bbf\u0bb1\u0bbe\u0bb0\u0bcd.<br><br><b>\u0baa\u0bbe\u0bb0\u0bbe\u0bb3\u0bc1\u0bae\u0ba9\u0bcd\u0bb1\u0bae\u0bcd (\u0baa\u0bbf\u0bb0\u0bbf\u0bb5\u0bc1 79-122)</b><br>\u0b95\u0bc1\u0b9f\u0bbf\u0baf\u0bb0\u0b9a\u0bc1\u0ba4\u0bcd \u0ba4\u0bb2\u0bc8\u0bb5\u0bb0\u0bcd, \u0bae\u0bbe\u0ba8\u0bbf\u0bb2\u0b99\u0bcd\u0b95\u0bb3\u0bb5\u0bc8 \u0bae\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bcd \u0bae\u0b95\u0bcd\u0b95\u0bb3\u0bb5\u0bc8 \u0b86\u0b95\u0bbf\u0baf\u0bb5\u0bb1\u0bcd\u0bb1\u0bc8 \u0b89\u0bb3\u0bcd\u0bb3\u0b9f\u0b95\u0bcd\u0b95\u0bbf\u0baf\u0ba4\u0bc1."}, "mains_gs2": {"title": "GS2: Governance & IR", "en": "<b>International Relations</b><br>Focus on India's neighborhood policy, Look East Policy, and bilateral relations.<br><br><b>E-Governance</b><br>Applications, models, successes, limitations, and potential of E-Governance in India.", "ta": "<b>\u0b9a\u0bb0\u0bcd\u0bb5\u0ba4\u0bc7\u0b9a \u0b89\u0bb1\u0bb5\u0bc1\u0b95\u0bb3\u0bcd</b><br>\u0b87\u0ba8\u0bcd\u0ba4\u0bbf\u0baf\u0bbe\u0bb5\u0bbf\u0ba9\u0bcd \u0b85\u0ba3\u0bcd\u0b9f\u0bc8 \u0ba8\u0bbe\u0b9f\u0bcd\u0b9f\u0bc1 \u0b95\u0bca\u0bb3\u0bcd\u0b95\u0bc8, \u0b95\u0bbf\u0bb4\u0b95\u0bcd\u0b95\u0bc1 \u0ba8\u0bcb\u0b95\u0bcd\u0b95\u0bbf\u0baf \u0b95\u0bca\u0bb3\u0bcd\u0b95\u0bc8 \u0b86\u0b95\u0bbf\u0baf\u0bb5\u0bb1\u0bcd\u0bb1\u0bbf\u0bb2\u0bcd \u0b95\u0bb5\u0ba9\u0bae\u0bcd.<br><br><b>\u0bae\u0bbf\u0ba9\u0bcd-\u0b86\u0bb3\u0bc1\u0bae\u0bc8</b><br>\u0b87\u0ba8\u0bcd\u0ba4\u0bbf\u0baf\u0bbe\u0bb5\u0bbf\u0bb2\u0bcd \u0bae\u0bbf\u0ba9\u0bcd-\u0b86\u0bb3\u0bc1\u0bae\u0bc8\u0baf\u0bbf\u0ba9\u0bcd \u0baa\u0baf\u0ba9\u0bcd\u0baa\u0bbe\u0b9f\u0bc1\u0b95\u0bb3\u0bcd, \u0bae\u0bbe\u0ba4\u0bbf\u0bb0\u0bbf\u0b95\u0bb3\u0bcd, \u0bb5\u0bc6\u0bb1\u0bcd\u0bb1\u0bbf\u0b95\u0bb3\u0bcd \u0bae\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bcd \u0bb5\u0bb0\u0bae\u0bcd\u0baa\u0bc1\u0b95\u0bb3\u0bcd."}, "ncert_his": {"title": "NCERT History (Class 6-12)", "en": "<b>The Indus Valley Civilization</b><br>Bronze Age civilization known for urban planning.<br><br><b>Buddhism & Jainism</b><br>Gautama Buddha delivered his first sermon at Sarnath.", "ta": "<b>\u0b9a\u0bbf\u0ba8\u0bcd\u0ba4\u0bc1 \u0b9a\u0bae\u0bb5\u0bc6\u0bb3\u0bbf \u0ba8\u0bbe\u0b95\u0bb0\u0bbf\u0b95\u0bae\u0bcd</b><br>\u0ba8\u0b95\u0bb0 \u0ba4\u0bbf\u0b9f\u0bcd\u0b9f\u0bae\u0bbf\u0b9f\u0bb2\u0bc1\u0b95\u0bcd\u0b95\u0bc1 \u0baa\u0bc6\u0baf\u0bb0\u0bcd \u0baa\u0bc6\u0bb1\u0bcd\u0bb1 \u0bb5\u0bc6\u0ba3\u0bcd\u0b95\u0bb2 \u0b95\u0bbe\u0bb2 \u0ba8\u0bbe\u0b95\u0bb0\u0bbf\u0b95\u0bae\u0bcd.<br><br><b>\u0baa\u0bcc\u0ba4\u0bcd\u0ba4\u0bae\u0bcd \u0bae\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bcd \u0b9a\u0bae\u0ba3\u0bae\u0bcd</b><br>\u0baa\u0bc1\u0ba4\u0bcd\u0ba4\u0bb0\u0bcd \u0ba4\u0ba9\u0ba4\u0bc1 \u0bae\u0bc1\u0ba4\u0bb2\u0bcd \u0baa\u0bcb\u0ba4\u0ba9\u0bc8\u0baf\u0bc8 \u0b9a\u0bbe\u0bb0\u0ba8\u0bbe\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd \u0bb5\u0bb4\u0b99\u0bcd\u0b95\u0bbf\u0ba9\u0bbe\u0bb0\u0bcd."}, "std_mod_his": {"title": "Modern History (Spectrum)", "en": "<b>Revolt of 1857</b><br>Also known as the Sepoy Mutiny. Causes included political, economic, socio-religious, and military factors.<br><br><b>Indian National Congress</b><br>Founded in 1885 by A.O. Hume.", "ta": "<b>1857 \u0baa\u0bc6\u0bb0\u0bc1\u0bae\u0bcd \u0baa\u0bc1\u0bb0\u0b9f\u0bcd\u0b9a\u0bbf</b><br>\u0b9a\u0bbf\u0baa\u0bcd\u0baa\u0bbe\u0baf\u0bcd \u0b95\u0bb2\u0b95\u0bae\u0bcd \u0b8e\u0ba9\u0bcd\u0bb1\u0bc1\u0bae\u0bcd \u0b85\u0bb4\u0bc8\u0b95\u0bcd\u0b95\u0baa\u0bcd\u0baa\u0b9f\u0bc1\u0b95\u0bbf\u0bb1\u0ba4\u0bc1. \u0b85\u0bb0\u0b9a\u0bbf\u0baf\u0bb2\u0bcd, \u0baa\u0bca\u0bb0\u0bc1\u0bb3\u0bbe\u0ba4\u0bbe\u0bb0 \u0bae\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bcd \u0bae\u0ba4 \u0b95\u0bbe\u0bb0\u0ba3\u0b99\u0bcd\u0b95\u0bb3\u0bcd.<br><br><b>\u0b87\u0ba8\u0bcd\u0ba4\u0bbf\u0baf \u0ba4\u0bc7\u0b9a\u0bbf\u0baf \u0b95\u0bbe\u0b99\u0bcd\u0b95\u0bbf\u0bb0\u0bb8\u0bcd</b><br>1885 \u0b87\u0bb2\u0bcd A.O. \u0bb9\u0bbf\u0baf\u0bc2\u0bae\u0bcd \u0b8e\u0ba9\u0bcd\u0baa\u0bb5\u0bb0\u0bbe\u0bb2\u0bcd \u0ba8\u0bbf\u0bb1\u0bc1\u0bb5\u0baa\u0bcd\u0baa\u0b9f\u0bcd\u0b9f\u0ba4\u0bc1."}, "std_art": {"title": "Art & Culture", "en": "<b>Temple Architecture</b><br>Nagara (North), Dravida (South), and Vesara (Mixed) styles.<br><br><b>Classical Dances</b><br>Bharatanatyam, Kathak, Kathakali, Kuchipudi, Odissi, Manipuri, Mohiniyattam, Sattriya.", "ta": "<b>\u0b95\u0bcb\u0baf\u0bbf\u0bb2\u0bcd \u0b95\u0b9f\u0bcd\u0b9f\u0bbf\u0b9f\u0b95\u0bcd\u0b95\u0bb2\u0bc8</b><br>\u0ba8\u0b95\u0bb0\u0bbe (\u0bb5\u0b9f\u0b95\u0bcd\u0b95\u0bc1), \u0ba4\u0bbf\u0bb0\u0bbe\u0bb5\u0bbf\u0b9f (\u0ba4\u0bc6\u0bb1\u0bcd\u0b95\u0bc1), \u0bae\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bcd \u0bb5\u0bc7\u0b9a\u0bb0\u0bbe (\u0b95\u0bb2\u0baa\u0bcd\u0baa\u0bc1) \u0baa\u0bbe\u0ba3\u0bbf\u0b95\u0bb3\u0bcd.<br><br><b>\u0baa\u0bbe\u0bb0\u0bae\u0bcd\u0baa\u0bb0\u0bbf\u0baf \u0ba8\u0b9f\u0ba9\u0b99\u0bcd\u0b95\u0bb3\u0bcd</b><br>\u0baa\u0bb0\u0ba4\u0ba8\u0bbe\u0b9f\u0bcd\u0b9f\u0bbf\u0baf\u0bae\u0bcd, \u0b95\u0ba4\u0b95\u0bcd, \u0b95\u0ba4\u0b95\u0bb3\u0bbf, \u0b95\u0bc1\u0b9a\u0bcd\u0b9a\u0bbf\u0baa\u0bcd\u0baa\u0bc1\u0b9f\u0bbf, \u0b92\u0b9f\u0bbf\u0bb8\u0bbf."}, "ncert_geo": {"title": "NCERT Geo (Class 6-12)", "en": "<b>Structure of the Earth</b><br>Crust, Mantle, Core.<br><br><b>Atmosphere</b><br>Troposphere, Stratosphere, Mesosphere, Thermosphere, Exosphere.", "ta": "<b>\u0baa\u0bc2\u0bae\u0bbf\u0baf\u0bbf\u0ba9\u0bcd \u0b95\u0b9f\u0bcd\u0b9f\u0bae\u0bc8\u0baa\u0bcd\u0baa\u0bc1</b><br>\u0bae\u0bc7\u0bb2\u0bcb\u0b9f\u0bc1, \u0bae\u0bc2\u0b9f\u0b95\u0bae\u0bcd, \u0b95\u0bb0\u0bc1.<br><br><b>\u0bb5\u0bb3\u0bbf\u0bae\u0ba3\u0bcd\u0b9f\u0bb2\u0bae\u0bcd</b><br>\u0b9f\u0bcd\u0bb0\u0bcb\u0baa\u0bcb\u0bb8\u0bcd\u0baa\u0bbf\u0baf\u0bb0\u0bcd, \u0bb8\u0bcd\u0b9f\u0bcd\u0bb0\u0bbe\u0b9f\u0bcb\u0bb8\u0bcd\u0baa\u0bbf\u0baf\u0bb0\u0bcd, \u0bae\u0bc0\u0b9a\u0bcb\u0bb8\u0bcd\u0baa\u0bbf\u0baf\u0bb0\u0bcd, \u0ba4\u0bc6\u0bb0\u0bcd\u0bae\u0bcb\u0bb8\u0bcd\u0baa\u0bbf\u0baf\u0bb0\u0bcd."}, "std_geo": {"title": "Advanced Geography", "en": "<b>Indian Monsoon</b><br>Driven by differential heating of land and water, shifting of ITCZ, and Jet Streams.<br><br><b>Ocean Currents</b><br>Warm and cold currents affect global climate.", "ta": "<b>\u0b87\u0ba8\u0bcd\u0ba4\u0bbf\u0baf\u0baa\u0bcd \u0baa\u0bb0\u0bc1\u0bb5\u0bae\u0bb4\u0bc8</b><br>\u0ba8\u0bbf\u0bb2\u0bae\u0bcd \u0bae\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bcd \u0ba8\u0bc0\u0bb0\u0bbf\u0ba9\u0bcd \u0bb5\u0bc7\u0bb1\u0bc1\u0baa\u0b9f\u0bcd\u0b9f \u0bb5\u0bc6\u0baa\u0bcd\u0baa\u0bae\u0bcd, ITCZ-\u0b87\u0ba9\u0bcd \u0ba8\u0b95\u0bb0\u0bcd\u0bb5\u0bc1 \u0b86\u0b95\u0bbf\u0baf\u0bb5\u0bb1\u0bcd\u0bb1\u0bbe\u0bb2\u0bcd \u0b87\u0baf\u0b95\u0bcd\u0b95\u0baa\u0bcd\u0baa\u0b9f\u0bc1\u0b95\u0bbf\u0bb1\u0ba4\u0bc1.<br><br><b>\u0b95\u0b9f\u0bb2\u0bcd \u0ba8\u0bc0\u0bb0\u0bcb\u0b9f\u0bcd\u0b9f\u0b99\u0bcd\u0b95\u0bb3\u0bcd</b><br>\u0b89\u0bb2\u0b95\u0bb3\u0bbe\u0bb5\u0bbf\u0baf \u0b95\u0bbe\u0bb2\u0ba8\u0bbf\u0bb2\u0bc8\u0baf\u0bc8 \u0baa\u0bbe\u0ba4\u0bbf\u0b95\u0bcd\u0b95\u0bbf\u0ba9\u0bcd\u0bb1\u0ba9."}, "ncert_eco": {"title": "NCERT Economy", "en": "<b>Sectors of Economy</b><br>Primary (Agriculture), Secondary (Manufacturing), Tertiary (Services).<br><br><b>GDP</b><br>Gross Domestic Product is the total market value of all final goods.", "ta": "<b>\u0baa\u0bca\u0bb0\u0bc1\u0bb3\u0bbe\u0ba4\u0bbe\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0ba9\u0bcd \u0ba4\u0bc1\u0bb1\u0bc8\u0b95\u0bb3\u0bcd</b><br>\u0bae\u0bc1\u0ba4\u0ba9\u0bcd\u0bae\u0bc8 (\u0bb5\u0bbf\u0bb5\u0b9a\u0bbe\u0baf\u0bae\u0bcd), \u0b87\u0bb0\u0ba3\u0bcd\u0b9f\u0bbe\u0bae\u0bcd \u0ba8\u0bbf\u0bb2\u0bc8 (\u0b89\u0bb1\u0bcd\u0baa\u0ba4\u0bcd\u0ba4\u0bbf), \u0bae\u0bc2\u0ba9\u0bcd\u0bb1\u0bbe\u0bae\u0bcd \u0ba8\u0bbf\u0bb2\u0bc8 (\u0b9a\u0bc7\u0bb5\u0bc8\u0b95\u0bb3\u0bcd).<br><br><b>GDP</b><br>\u0b85\u0ba9\u0bc8\u0ba4\u0bcd\u0ba4\u0bc1 \u0b87\u0bb1\u0bc1\u0ba4\u0bbf\u0baa\u0bcd \u0baa\u0bca\u0bb0\u0bc1\u0b9f\u0bcd\u0b95\u0bb3\u0bbf\u0ba9\u0bcd \u0bae\u0bca\u0ba4\u0bcd\u0ba4 \u0b9a\u0ba8\u0bcd\u0ba4\u0bc8 \u0bae\u0ba4\u0bbf\u0baa\u0bcd\u0baa\u0bc1."}, "std_eco": {"title": "Indian Economy", "en": "<b>Monetary Policy</b><br>Regulated by RBI to control inflation using tools like Repo Rate, CRR, SLR.<br><br><b>Fiscal Policy</b><br>Government's revenue and expenditure policy.", "ta": "<b>\u0baa\u0ba3\u0bb5\u0bbf\u0baf\u0bb2\u0bcd \u0b95\u0bca\u0bb3\u0bcd\u0b95\u0bc8</b><br>\u0baa\u0ba3\u0bb5\u0bc0\u0b95\u0bcd\u0b95\u0ba4\u0bcd\u0ba4\u0bc8\u0b95\u0bcd \u0b95\u0b9f\u0bcd\u0b9f\u0bc1\u0baa\u0bcd\u0baa\u0b9f\u0bc1\u0ba4\u0bcd\u0ba4 RBI \u0b86\u0bb2\u0bcd \u0b95\u0bc8\u0baf\u0bbe\u0bb3\u0baa\u0bcd\u0baa\u0b9f\u0bc1\u0b95\u0bbf\u0bb1\u0ba4\u0bc1 (Repo Rate, CRR, SLR).<br><br><b>\u0ba8\u0bbf\u0ba4\u0bbf\u0b95\u0bcd \u0b95\u0bca\u0bb3\u0bcd\u0b95\u0bc8</b><br>\u0b85\u0bb0\u0b9a\u0bbe\u0b99\u0bcd\u0b95\u0ba4\u0bcd\u0ba4\u0bbf\u0ba9\u0bcd \u0bb5\u0bb0\u0bc1\u0bb5\u0bbe\u0baf\u0bcd \u0bae\u0bb1\u0bcd\u0bb1\u0bc1\u0bae\u0bcd \u0b9a\u0bc6\u0bb2\u0bb5\u0bc1 \u0b95\u0bca\u0bb3\u0bcd\u0b95\u0bc8."}, "mains_gs3": {"title": "GS3: Tech, Env & Security", "en": "<b>Disaster Management</b><br>NDMA guidelines, Sendai Framework.<br><br><b>Internal Security</b><br>Cyber security, border management, terrorism, and organized crime.", "ta": "<b>\u0baa\u0bc7\u0bb0\u0bbf\u0b9f\u0bb0\u0bcd \u0bae\u0bc7\u0bb2\u0bbe\u0ba3\u0bcd\u0bae\u0bc8</b><br>NDMA \u0bb5\u0bb4\u0bbf\u0b95\u0bbe\u0b9f\u0bcd\u0b9f\u0bc1\u0ba4\u0bb2\u0bcd\u0b95\u0bb3\u0bcd.<br><br><b>\u0b89\u0bb3\u0bcd\u0ba8\u0bbe\u0b9f\u0bcd\u0b9f\u0bc1 \u0baa\u0bbe\u0ba4\u0bc1\u0b95\u0bbe\u0baa\u0bcd\u0baa\u0bc1</b><br>\u0b9a\u0bc8\u0baa\u0bb0\u0bcd \u0baa\u0bbe\u0ba4\u0bc1\u0b95\u0bbe\u0baa\u0bcd\u0baa\u0bc1, \u0b8e\u0bb2\u0bcd\u0bb2\u0bc8 \u0bae\u0bc7\u0bb2\u0bbe\u0ba3\u0bcd\u0bae\u0bc8, \u0baa\u0baf\u0b99\u0bcd\u0b95\u0bb0\u0bb5\u0bbe\u0ba4\u0bae\u0bcd."}};
+    var QBANK = {"ncert_pol": [{"en": {"q": "In which year was the Constituent Assembly formed?", "options": ["1942", "1945", "1946", "1947"]}, "ta": {"q": "\u0b85\u0bb0\u0b9a\u0bbf\u0baf\u0bb2\u0bae\u0bc8\u0baa\u0bcd\u0baa\u0bc1 \u0ba8\u0bbf\u0bb0\u0bcd\u0ba3\u0baf \u0b9a\u0baa\u0bc8 \u0b8e\u0ba8\u0bcd\u0ba4 \u0b86\u0ba3\u0bcd\u0b9f\u0bbf\u0bb2\u0bcd \u0b89\u0bb0\u0bc1\u0bb5\u0bbe\u0b95\u0bcd\u0b95\u0baa\u0bcd\u0baa\u0b9f\u0bcd\u0b9f\u0ba4\u0bc1?", "options": ["1942", "1945", "1946", "1947"]}, "ans": 2, "exp_en": "Formed in 1946 under Cabinet Mission Plan.", "exp_ta": "1946 \u0b87\u0bb2\u0bcd \u0b89\u0bb0\u0bc1\u0bb5\u0bbe\u0b95\u0bcd\u0b95\u0baa\u0bcd\u0baa\u0b9f\u0bcd\u0b9f\u0ba4\u0bc1."}, {"en": {"q": "Which part deals with Fundamental Rights?", "options": ["Part I", "Part II", "Part III", "Part IV"]}, "ta": {"q": "\u0b8e\u0ba8\u0bcd\u0ba4 \u0baa\u0b95\u0bc1\u0ba4\u0bbf \u0b85\u0b9f\u0bbf\u0baa\u0bcd\u0baa\u0b9f\u0bc8 \u0b89\u0bb0\u0bbf\u0bae\u0bc8\u0b95\u0bb3\u0bc8 \u0b95\u0bc8\u0baf\u0bbe\u0bb3\u0bc1\u0b95\u0bbf\u0bb1\u0ba4\u0bc1?", "options": ["\u0baa\u0b95\u0bc1\u0ba4\u0bbf I", "\u0baa\u0b95\u0bc1\u0ba4\u0bbf II", "\u0baa\u0b95\u0bc1\u0ba4\u0bbf III", "\u0baa\u0b95\u0bc1\u0ba4\u0bbf IV"]}, "ans": 2, "exp_en": "Part III (Articles 12-35).", "exp_ta": "\u0baa\u0b95\u0bc1\u0ba4\u0bbf III (\u0bb5\u0bbf\u0ba4\u0bbf\u0b95\u0bb3\u0bcd 12-35)."}, {"en": {"q": "Who proposed the idea of a Constituent Assembly?", "options": ["Nehru", "M.N. Roy", "Ambedkar", "Gandhi"]}, "ta": {"q": "\u0b85\u0bb0\u0b9a\u0bbf\u0baf\u0bb2\u0bae\u0bc8\u0baa\u0bcd\u0baa\u0bc1 \u0ba8\u0bbf\u0bb0\u0bcd\u0ba3\u0baf \u0b9a\u0baa\u0bc8 \u0baf\u0bcb\u0b9a\u0ba9\u0bc8\u0baf\u0bc8 \u0bae\u0bc1\u0ba9\u0bcd\u0bb5\u0bc8\u0ba4\u0bcd\u0ba4\u0bb5\u0bb0\u0bcd?", "options": ["\u0ba8\u0bc7\u0bb0\u0bc1", "\u0b8e\u0bae\u0bcd.\u0b8e\u0ba9\u0bcd. \u0bb0\u0bbe\u0baf\u0bcd", "\u0b85\u0bae\u0bcd\u0baa\u0bc7\u0ba4\u0bcd\u0b95\u0bb0\u0bcd", "\u0b95\u0bbe\u0ba8\u0bcd\u0ba4\u0bbf"]}, "ans": 1, "exp_en": "M.N. Roy proposed it in 1934.", "exp_ta": "\u0b8e\u0bae\u0bcd.\u0b8e\u0ba9\u0bcd. \u0bb0\u0bbe\u0baf\u0bcd 1934 \u0b87\u0bb2\u0bcd \u0bae\u0bc1\u0ba9\u0bcd\u0bb5\u0bc8\u0ba4\u0bcd\u0ba4\u0bbe\u0bb0\u0bcd."}, {"en": {"q": "Which is NOT a Fundamental Right?", "options": ["Right to Equality", "Right to Property", "Right to Freedom", "Right against Exploitation"]}, "ta": {"q": "\u0b8e\u0ba4\u0bc1 \u0b85\u0b9f\u0bbf\u0baa\u0bcd\u0baa\u0b9f\u0bc8 \u0b89\u0bb0\u0bbf\u0bae\u0bc8 \u0b85\u0bb2\u0bcd\u0bb2?", "options": ["\u0b9a\u0bae\u0ba4\u0bcd\u0ba4\u0bc1\u0bb5 \u0b89\u0bb0\u0bbf\u0bae\u0bc8", "\u0b9a\u0bca\u0ba4\u0bcd\u0ba4\u0bc1 \u0b89\u0bb0\u0bbf\u0bae\u0bc8", "\u0b9a\u0bc1\u0ba4\u0ba8\u0bcd\u0ba4\u0bbf\u0bb0 \u0b89\u0bb0\u0bbf\u0bae\u0bc8", "\u0b9a\u0bc1\u0bb0\u0ba3\u0bcd\u0b9f\u0bb2\u0bc1\u0b95\u0bcd\u0b95\u0bc1 \u0b8e\u0ba4\u0bbf\u0bb0\u0bbe\u0ba9 \u0b89\u0bb0\u0bbf\u0bae\u0bc8"]}, "ans": 1, "exp_en": "Removed by 44th Amendment in 1978.", "exp_ta": "1978 \u0b87\u0bb2\u0bcd 44 \u0bb5\u0ba4\u0bc1 \u0ba4\u0bbf\u0bb0\u0bc1\u0ba4\u0bcd\u0ba4\u0ba4\u0bcd\u0ba4\u0bbf\u0ba9\u0bcd \u0bae\u0bc2\u0bb2\u0bae\u0bcd \u0ba8\u0bc0\u0b95\u0bcd\u0b95\u0baa\u0bcd\u0baa\u0b9f\u0bcd\u0b9f\u0ba4\u0bc1."}, {"en": {"q": "Time taken to frame the Constitution?", "options": ["2 Y, 11 M, 18 D", "2 Y, 9 M, 8 D", "3 Years", "1 Y, 10 M, 20 D"]}, "ta": {"q": "\u0b85\u0bb0\u0b9a\u0bbf\u0baf\u0bb2\u0bae\u0bc8\u0baa\u0bcd\u0baa\u0bc8 \u0b89\u0bb0\u0bc1\u0bb5\u0bbe\u0b95\u0bcd\u0b95 \u0b8e\u0b9f\u0bc1\u0ba4\u0bcd\u0ba4 \u0ba8\u0bc7\u0bb0\u0bae\u0bcd?", "options": ["2 \u0b86, 11 \u0bae\u0bbe, 18 \u0ba8\u0bbe", "2 \u0b86, 9 \u0bae\u0bbe, 8 \u0ba8\u0bbe", "3 \u0b86\u0ba3\u0bcd\u0b9f\u0bc1\u0b95\u0bb3\u0bcd", "1 \u0b86, 10 \u0bae\u0bbe, 20 \u0ba8\u0bbe"]}, "ans": 0, "exp_en": "2 years, 11 months, and 18 days.", "exp_ta": "2 \u0b86\u0ba3\u0bcd\u0b9f\u0bc1\u0b95\u0bb3\u0bcd, 11 \u0bae\u0bbe\u0ba4\u0b99\u0bcd\u0b95\u0bb3\u0bcd, 18 \u0ba8\u0bbe\u0b9f\u0bcd\u0b95\u0bb3\u0bcd."}], "std_pol": [{"en": {"q": "Minimum age for President of India?", "options": ["25", "30", "35", "40"]}, "ta": {"q": "\u0b95\u0bc1\u0b9f\u0bbf\u0baf\u0bb0\u0b9a\u0bc1\u0ba4\u0bcd \u0ba4\u0bb2\u0bc8\u0bb5\u0bb0\u0bc1\u0b95\u0bcd\u0b95\u0bbe\u0ba9 \u0b95\u0bc1\u0bb1\u0bc8\u0ba8\u0bcd\u0ba4\u0baa\u0b9f\u0bcd\u0b9a \u0bb5\u0baf\u0ba4\u0bc1?", "options": ["25", "30", "35", "40"]}, "ans": 2, "exp_en": "Must be at least 35 years old.", "exp_ta": "\u0b95\u0bc1\u0bb1\u0bc8\u0ba8\u0bcd\u0ba4\u0baa\u0b9f\u0bcd\u0b9a\u0bae\u0bcd 35 \u0bb5\u0baf\u0ba4\u0bc1 \u0b87\u0bb0\u0bc1\u0b95\u0bcd\u0b95 \u0bb5\u0bc7\u0ba3\u0bcd\u0b9f\u0bc1\u0bae\u0bcd."}, {"en": {"q": "Who is the ex-officio Chairman of Rajya Sabha?", "options": ["President", "Vice-President", "Prime Minister", "Speaker"]}, "ta": {"q": "\u0bae\u0bbe\u0ba8\u0bbf\u0bb2\u0b99\u0bcd\u0b95\u0bb3\u0bb5\u0bc8\u0baf\u0bbf\u0ba9\u0bcd \u0ba4\u0bb2\u0bc8\u0bb5\u0bb0\u0bcd \u0baf\u0bbe\u0bb0\u0bcd?", "options": ["\u0b95\u0bc1\u0b9f\u0bbf\u0baf\u0bb0\u0b9a\u0bc1\u0ba4\u0bcd \u0ba4\u0bb2\u0bc8\u0bb5\u0bb0\u0bcd", "\u0ba4\u0bc1\u0ba3\u0bc8 \u0b95\u0bc1\u0b9f\u0bbf\u0baf\u0bb0\u0b9a\u0bc1\u0ba4\u0bcd \u0ba4\u0bb2\u0bc8\u0bb5\u0bb0\u0bcd", "\u0baa\u0bbf\u0bb0\u0ba4\u0bae\u0bb0\u0bcd", "\u0b9a\u0baa\u0bbe\u0ba8\u0bbe\u0baf\u0b95\u0bb0\u0bcd"]}, "ans": 1, "exp_en": "The Vice-President of India.", "exp_ta": "\u0ba4\u0bc1\u0ba3\u0bc8 \u0b95\u0bc1\u0b9f\u0bbf\u0baf\u0bb0\u0b9a\u0bc1\u0ba4\u0bcd \u0ba4\u0bb2\u0bc8\u0bb5\u0bb0\u0bcd."}, {"en": {"q": "Maximum strength of Lok Sabha?", "options": ["545", "550", "552", "500"]}, "ta": {"q": "\u0bae\u0b95\u0bcd\u0b95\u0bb3\u0bb5\u0bc8\u0baf\u0bbf\u0ba9\u0bcd \u0b85\u0ba4\u0bbf\u0b95\u0baa\u0b9f\u0bcd\u0b9a \u0b89\u0bb1\u0bc1\u0baa\u0bcd\u0baa\u0bbf\u0ba9\u0bb0\u0bcd\u0b95\u0bb3\u0bcd?", "options": ["545", "550", "552", "500"]}, "ans": 2, "exp_en": "Maximum fixed strength is 552.", "exp_ta": "\u0b85\u0ba4\u0bbf\u0b95\u0baa\u0b9f\u0bcd\u0b9a\u0bae\u0bcd 552."}, {"en": {"q": "Who appoints the Chief Justice of India?", "options": ["Prime Minister", "Law Minister", "President", "Parliament"]}, "ta": {"q": "\u0b87\u0ba8\u0bcd\u0ba4\u0bbf\u0baf \u0ba4\u0bb2\u0bc8\u0bae\u0bc8 \u0ba8\u0bc0\u0ba4\u0bbf\u0baa\u0ba4\u0bbf\u0baf\u0bc8 \u0ba8\u0bbf\u0baf\u0bae\u0bbf\u0baa\u0bcd\u0baa\u0bb5\u0bb0\u0bcd \u0baf\u0bbe\u0bb0\u0bcd?", "options": ["\u0baa\u0bbf\u0bb0\u0ba4\u0bae\u0bb0\u0bcd", "\u0b9a\u0b9f\u0bcd\u0b9f \u0b85\u0bae\u0bc8\u0b9a\u0bcd\u0b9a\u0bb0\u0bcd", "\u0b95\u0bc1\u0b9f\u0bbf\u0baf\u0bb0\u0b9a\u0bc1\u0ba4\u0bcd \u0ba4\u0bb2\u0bc8\u0bb5\u0bb0\u0bcd", "\u0baa\u0bbe\u0bb0\u0bbe\u0bb3\u0bc1\u0bae\u0ba9\u0bcd\u0bb1\u0bae\u0bcd"]}, "ans": 2, "exp_en": "The President appoints the CJI.", "exp_ta": "\u0b95\u0bc1\u0b9f\u0bbf\u0baf\u0bb0\u0b9a\u0bc1\u0ba4\u0bcd \u0ba4\u0bb2\u0bc8\u0bb5\u0bb0\u0bcd \u0ba8\u0bbf\u0baf\u0bae\u0bbf\u0b95\u0bcd\u0b95\u0bbf\u0bb1\u0bbe\u0bb0\u0bcd."}, {"en": {"q": "Which Article deals with National Emergency?", "options": ["Article 352", "Article 356", "Article 360", "Article 370"]}, "ta": {"q": "\u0ba4\u0bc7\u0b9a\u0bbf\u0baf \u0b85\u0bb5\u0b9a\u0bb0\u0ba8\u0bbf\u0bb2\u0bc8 \u0baa\u0bb1\u0bcd\u0bb1\u0bbf \u0b95\u0bc2\u0bb1\u0bc1\u0bae\u0bcd \u0bb5\u0bbf\u0ba4\u0bbf?", "options": ["\u0bb5\u0bbf\u0ba4\u0bbf 352", "\u0bb5\u0bbf\u0ba4\u0bbf 356", "\u0bb5\u0bbf\u0ba4\u0bbf 360", "\u0bb5\u0bbf\u0ba4\u0bbf 370"]}, "ans": 0, "exp_en": "Article 352 deals with National Emergency.", "exp_ta": "\u0bb5\u0bbf\u0ba4\u0bbf 352."}], "mains_gs2": [{"en": {"q": "SAARC headquarters is located in?", "options": ["New Delhi", "Kathmandu", "Dhaka", "Colombo"]}, "ta": {"q": "\u0b9a\u0bbe\u0bb0\u0bcd\u0b95\u0bcd \u0ba4\u0bb2\u0bc8\u0bae\u0bc8\u0baf\u0b95\u0bae\u0bcd \u0b8e\u0b99\u0bcd\u0b95\u0bc1\u0bb3\u0bcd\u0bb3\u0ba4\u0bc1?", "options": ["\u0baa\u0bc1\u0ba4\u0bc1 \u0ba4\u0bbf\u0bb2\u0bcd\u0bb2\u0bbf", "\u0b95\u0bbe\u0ba4\u0bcd\u0bae\u0bbe\u0ba3\u0bcd\u0b9f\u0bc1", "\u0b9f\u0bbe\u0b95\u0bcd\u0b95\u0bbe", "\u0b95\u0bca\u0bb4\u0bc1\u0bae\u0bcd\u0baa\u0bc1"]}, "ans": 1, "exp_en": "Located in Kathmandu, Nepal.", "exp_ta": "\u0b95\u0bbe\u0ba4\u0bcd\u0bae\u0bbe\u0ba3\u0bcd\u0b9f\u0bc1\u0bb5\u0bbf\u0bb2\u0bcd \u0b89\u0bb3\u0bcd\u0bb3\u0ba4\u0bc1."}, {"en": {"q": "Which country is NOT a member of BIMSTEC?", "options": ["India", "Sri Lanka", "Pakistan", "Thailand"]}, "ta": {"q": "\u0b8e\u0ba8\u0bcd\u0ba4 \u0ba8\u0bbe\u0b9f\u0bc1 BIMSTEC \u0b87\u0bb2\u0bcd \u0b89\u0bb1\u0bc1\u0baa\u0bcd\u0baa\u0bbf\u0ba9\u0bb0\u0bcd \u0b87\u0bb2\u0bcd\u0bb2\u0bc8?", "options": ["\u0b87\u0ba8\u0bcd\u0ba4\u0bbf\u0baf\u0bbe", "\u0b87\u0bb2\u0b99\u0bcd\u0b95\u0bc8", "\u0baa\u0bbe\u0b95\u0bbf\u0bb8\u0bcd\u0ba4\u0bbe\u0ba9\u0bcd", "\u0ba4\u0bbe\u0baf\u0bcd\u0bb2\u0bbe\u0ba8\u0bcd\u0ba4\u0bc1"]}, "ans": 2, "exp_en": "Pakistan is not a member of BIMSTEC.", "exp_ta": "\u0baa\u0bbe\u0b95\u0bbf\u0bb8\u0bcd\u0ba4\u0bbe\u0ba9\u0bcd \u0b89\u0bb1\u0bc1\u0baa\u0bcd\u0baa\u0bbf\u0ba9\u0bb0\u0bcd \u0b87\u0bb2\u0bcd\u0bb2\u0bc8."}, {"en": {"q": "PRAGATI platform is used for?", "options": ["Agriculture", "E-Governance", "Military", "Education"]}, "ta": {"q": "PRAGATI \u0ba4\u0bb3\u0bae\u0bcd \u0b8e\u0ba4\u0bb1\u0bcd\u0b95\u0bbe\u0b95\u0baa\u0bcd \u0baa\u0baf\u0ba9\u0bcd\u0baa\u0b9f\u0bc1\u0ba4\u0bcd\u0ba4\u0baa\u0bcd\u0baa\u0b9f\u0bc1\u0b95\u0bbf\u0bb1\u0ba4\u0bc1?", "options": ["\u0bb5\u0bbf\u0bb5\u0b9a\u0bbe\u0baf\u0bae\u0bcd", "\u0bae\u0bbf\u0ba9\u0bcd-\u0b86\u0bb3\u0bc1\u0bae\u0bc8", "\u0bb0\u0bbe\u0ba3\u0bc1\u0bb5\u0bae\u0bcd", "\u0b95\u0bb2\u0bcd\u0bb5\u0bbf"]}, "ans": 1, "exp_en": "It is an ICT-based multi-modal platform for Pro-Active Governance.", "exp_ta": "\u0b87\u0ba4\u0bc1 \u0bae\u0bbf\u0ba9\u0bcd-\u0b86\u0bb3\u0bc1\u0bae\u0bc8\u0b95\u0bcd\u0b95\u0bbe\u0ba9 \u0ba4\u0bb3\u0bae\u0bcd."}, {"en": {"q": "Right to Information Act was passed in?", "options": ["2002", "2005", "2010", "2015"]}, "ta": {"q": "\u0ba4\u0b95\u0bb5\u0bb2\u0bcd \u0b85\u0bb1\u0bbf\u0baf\u0bc1\u0bae\u0bcd \u0b89\u0bb0\u0bbf\u0bae\u0bc8\u0b9a\u0bcd \u0b9a\u0b9f\u0bcd\u0b9f\u0bae\u0bcd \u0b8e\u0ba8\u0bcd\u0ba4 \u0b86\u0ba3\u0bcd\u0b9f\u0bc1?", "options": ["2002", "2005", "2010", "2015"]}, "ans": 1, "exp_en": "Passed in 2005.", "exp_ta": "2005 \u0b87\u0bb2\u0bcd \u0ba8\u0bbf\u0bb1\u0bc8\u0bb5\u0bc7\u0bb1\u0bcd\u0bb1\u0baa\u0bcd\u0baa\u0b9f\u0bcd\u0b9f\u0ba4\u0bc1."}, {"en": {"q": "Who heads the NITI Aayog?", "options": ["President", "Finance Minister", "Prime Minister", "Home Minister"]}, "ta": {"q": "NITI \u0b86\u0baf\u0bcb\u0b95\u0bcd \u0ba4\u0bb2\u0bc8\u0bb5\u0bb0\u0bcd \u0baf\u0bbe\u0bb0\u0bcd?", "options": ["\u0b95\u0bc1\u0b9f\u0bbf\u0baf\u0bb0\u0b9a\u0bc1\u0ba4\u0bcd \u0ba4\u0bb2\u0bc8\u0bb5\u0bb0\u0bcd", "\u0ba8\u0bbf\u0ba4\u0bbf\u0baf\u0bae\u0bc8\u0b9a\u0bcd\u0b9a\u0bb0\u0bcd", "\u0baa\u0bbf\u0bb0\u0ba4\u0bae\u0bb0\u0bcd", "\u0b89\u0bb3\u0bcd\u0ba4\u0bc1\u0bb1\u0bc8 \u0b85\u0bae\u0bc8\u0b9a\u0bcd\u0b9a\u0bb0\u0bcd"]}, "ans": 2, "exp_en": "The Prime Minister is the ex-officio chairman.", "exp_ta": "\u0baa\u0bbf\u0bb0\u0ba4\u0bae\u0bb0\u0bcd \u0b87\u0ba4\u0ba9\u0bcd \u0ba4\u0bb2\u0bc8\u0bb5\u0bb0\u0bcd."}], "ncert_his": [{"en": {"q": "First sermon of Buddha?", "options": ["Bodh Gaya", "Sarnath", "Kushinagar", "Lumbini"]}, "ta": {"q": "\u0baa\u0bc1\u0ba4\u0bcd\u0ba4\u0bb0\u0bbf\u0ba9\u0bcd \u0bae\u0bc1\u0ba4\u0bb2\u0bcd \u0baa\u0bcb\u0ba4\u0ba9\u0bc8?", "options": ["\u0baa\u0bc1\u0ba4\u0bcd\u0ba4\u0b95\u0baf\u0bbe", "\u0b9a\u0bbe\u0bb0\u0ba8\u0bbe\u0ba4\u0bcd", "\u0b95\u0bc1\u0bb7\u0bbf\u0ba8\u0b95\u0bb0\u0bcd", "\u0bb2\u0bc1\u0bae\u0bcd\u0baa\u0bbf\u0ba9\u0bbf"]}, "ans": 1, "exp_en": "Sarnath.", "exp_ta": "\u0b9a\u0bbe\u0bb0\u0ba8\u0bbe\u0ba4\u0bcd."}, {"en": {"q": "Harappan Civilization age?", "options": ["Stone", "Bronze", "Iron", "Copper"]}, "ta": {"q": "\u0bb9\u0bb0\u0baa\u0bcd\u0baa\u0bbe \u0ba8\u0bbe\u0b95\u0bb0\u0bbf\u0b95\u0bae\u0bcd \u0b8e\u0ba8\u0bcd\u0ba4 \u0b95\u0bbe\u0bb2\u0bae\u0bcd?", "options": ["\u0b95\u0bb1\u0bcd\u0b95\u0bbe\u0bb2\u0bae\u0bcd", "\u0bb5\u0bc6\u0ba3\u0bcd\u0b95\u0bb2 \u0b95\u0bbe\u0bb2\u0bae\u0bcd", "\u0b87\u0bb0\u0bc1\u0bae\u0bcd\u0baa\u0bc1 \u0b95\u0bbe\u0bb2\u0bae\u0bcd", "\u0ba4\u0bbe\u0bae\u0bbf\u0bb0 \u0b95\u0bbe\u0bb2\u0bae\u0bcd"]}, "ans": 1, "exp_en": "Bronze Age.", "exp_ta": "\u0bb5\u0bc6\u0ba3\u0bcd\u0b95\u0bb2 \u0b95\u0bbe\u0bb2\u0bae\u0bcd."}, {"en": {"q": "Who founded the Mauryan Empire?", "options": ["Ashoka", "Chandragupta", "Bindusara", "Kautilya"]}, "ta": {"q": "\u0bae\u0bcc\u0bb0\u0bbf\u0baf\u0baa\u0bcd \u0baa\u0bc7\u0bb0\u0bb0\u0b9a\u0bc8 \u0ba8\u0bbf\u0bb1\u0bc1\u0bb5\u0bbf\u0baf\u0bb5\u0bb0\u0bcd \u0baf\u0bbe\u0bb0\u0bcd?", "options": ["\u0b85\u0b9a\u0bcb\u0b95\u0bb0\u0bcd", "\u0b9a\u0ba8\u0bcd\u0ba4\u0bbf\u0bb0\u0b95\u0bc1\u0baa\u0bcd\u0ba4\u0bb0\u0bcd", "\u0baa\u0bbf\u0ba8\u0bcd\u0ba4\u0bc1\u0b9a\u0bbe\u0bb0\u0bb0\u0bcd", "\u0b95\u0bcc\u0b9f\u0bbf\u0bb2\u0bcd\u0baf\u0bb0\u0bcd"]}, "ans": 1, "exp_en": "Chandragupta Maurya.", "exp_ta": "\u0b9a\u0ba8\u0bcd\u0ba4\u0bbf\u0bb0\u0b95\u0bc1\u0baa\u0bcd\u0ba4 \u0bae\u0bcc\u0bb0\u0bbf\u0baf\u0bb0\u0bcd."}, {"en": {"q": "The great bath is in?", "options": ["Harappa", "Mohenjodaro", "Lothal", "Kalibangan"]}, "ta": {"q": "\u0baa\u0bc6\u0bb0\u0bc1\u0b99\u0bcd\u0b95\u0bc1\u0bb3\u0bae\u0bcd \u0b8e\u0b99\u0bcd\u0b95\u0bc1\u0bb3\u0bcd\u0bb3\u0ba4\u0bc1?", "options": ["\u0bb9\u0bb0\u0baa\u0bcd\u0baa\u0bbe", "\u0bae\u0bca\u0b95\u0b9e\u0bcd\u0b9a\u0ba4\u0bbe\u0bb0\u0bcb", "\u0bb2\u0bcb\u0ba4\u0bb2\u0bcd", "\u0b95\u0bbe\u0bb3\u0bbf\u0baa\u0b99\u0bcd\u0b95\u0ba9\u0bcd"]}, "ans": 1, "exp_en": "Mohenjodaro.", "exp_ta": "\u0bae\u0bca\u0b95\u0b9e\u0bcd\u0b9a\u0ba4\u0bbe\u0bb0\u0bcb."}, {"en": {"q": "Language of early Buddhist texts?", "options": ["Sanskrit", "Prakrit", "Pali", "Hindi"]}, "ta": {"q": "\u0baa\u0bcc\u0ba4\u0bcd\u0ba4 \u0ba8\u0bc2\u0bb2\u0bcd\u0b95\u0bb3\u0bbf\u0ba9\u0bcd \u0bae\u0bca\u0bb4\u0bbf?", "options": ["\u0b9a\u0bae\u0bb8\u0bcd\u0b95\u0bbf\u0bb0\u0bc1\u0ba4\u0bae\u0bcd", "\u0baa\u0bbf\u0bb0\u0bbe\u0b95\u0bbf\u0bb0\u0bc1\u0ba4\u0bae\u0bcd", "\u0baa\u0bbe\u0bb3\u0bbf", "\u0b87\u0ba8\u0bcd\u0ba4\u0bbf"]}, "ans": 2, "exp_en": "Pali.", "exp_ta": "\u0baa\u0bbe\u0bb3\u0bbf."}], "std_mod_his": [{"en": {"q": "INC founded in?", "options": ["1857", "1885", "1905", "1947"]}, "ta": {"q": "INC \u0b8e\u0ba8\u0bcd\u0ba4 \u0b86\u0ba3\u0bcd\u0b9f\u0bc1 \u0ba8\u0bbf\u0bb1\u0bc1\u0bb5\u0baa\u0bcd\u0baa\u0b9f\u0bcd\u0b9f\u0ba4\u0bc1?", "options": ["1857", "1885", "1905", "1947"]}, "ans": 1, "exp_en": "1885.", "exp_ta": "1885."}, {"en": {"q": "Who started the Home Rule Movement?", "options": ["Gandhi", "Tilak", "Nehru", "Bose"]}, "ta": {"q": "\u0bb9\u0bcb\u0bae\u0bcd \u0bb0\u0bc2\u0bb2\u0bcd \u0b87\u0baf\u0b95\u0bcd\u0b95\u0ba4\u0bcd\u0ba4\u0bc8 \u0ba4\u0bca\u0b9f\u0b99\u0bcd\u0b95\u0bbf\u0baf\u0bb5\u0bb0\u0bcd?", "options": ["\u0b95\u0bbe\u0ba8\u0bcd\u0ba4\u0bbf", "\u0ba4\u0bbf\u0bb2\u0b95\u0bb0\u0bcd", "\u0ba8\u0bc7\u0bb0\u0bc1", "\u0baa\u0bcb\u0bb8\u0bcd"]}, "ans": 1, "exp_en": "Bal Gangadhar Tilak and Annie Besant.", "exp_ta": "\u0baa\u0bbe\u0bb2 \u0b95\u0b99\u0bcd\u0b95\u0bbe\u0ba4\u0bb0 \u0ba4\u0bbf\u0bb2\u0b95\u0bb0\u0bcd."}, {"en": {"q": "Partition of Bengal year?", "options": ["1901", "1905", "1911", "1920"]}, "ta": {"q": "\u0bb5\u0b99\u0bcd\u0b95\u0baa\u0bcd \u0baa\u0bbf\u0bb0\u0bbf\u0bb5\u0bbf\u0ba9\u0bc8 \u0b86\u0ba3\u0bcd\u0b9f\u0bc1?", "options": ["1901", "1905", "1911", "1920"]}, "ans": 1, "exp_en": "1905 by Lord Curzon.", "exp_ta": "1905."}, {"en": {"q": "Quit India Movement started in?", "options": ["1930", "1940", "1942", "1945"]}, "ta": {"q": "\u0bb5\u0bc6\u0bb3\u0bcd\u0bb3\u0bc8\u0baf\u0ba9\u0bc7 \u0bb5\u0bc6\u0bb3\u0bbf\u0baf\u0bc7\u0bb1\u0bc1 \u0b87\u0baf\u0b95\u0bcd\u0b95\u0bae\u0bcd?", "options": ["1930", "1940", "1942", "1945"]}, "ans": 2, "exp_en": "August 1942.", "exp_ta": "\u0b86\u0b95\u0bb8\u0bcd\u0b9f\u0bcd 1942."}, {"en": {"q": "First Viceroy of India?", "options": ["Clive", "Hastings", "Canning", "Mountbatten"]}, "ta": {"q": "\u0b87\u0ba8\u0bcd\u0ba4\u0bbf\u0baf\u0bbe\u0bb5\u0bbf\u0ba9\u0bcd \u0bae\u0bc1\u0ba4\u0bb2\u0bcd \u0bb5\u0bc8\u0bb8\u0bcd\u0bb0\u0bbe\u0baf\u0bcd?", "options": ["\u0b95\u0bbf\u0bb3\u0bc8\u0bb5\u0bcd", "\u0bb9\u0bc7\u0bb8\u0bcd\u0b9f\u0bbf\u0b99\u0bcd\u0bb8\u0bcd", "\u0b95\u0bbe\u0ba9\u0bbf\u0b99\u0bcd", "\u0bae\u0bb5\u0bc1\u0ba3\u0bcd\u0b9f\u0bcd\u0baa\u0bc7\u0b9f\u0bcd\u0b9f\u0ba9\u0bcd"]}, "ans": 2, "exp_en": "Lord Canning.", "exp_ta": "\u0b95\u0bbe\u0ba9\u0bbf\u0b99\u0bcd \u0baa\u0bbf\u0bb0\u0baa\u0bc1."}], "std_art": [{"en": {"q": "Bharatanatyam is from?", "options": ["Kerala", "Tamil Nadu", "Andhra", "Odisha"]}, "ta": {"q": "\u0baa\u0bb0\u0ba4\u0ba8\u0bbe\u0b9f\u0bcd\u0b9f\u0bbf\u0baf\u0bae\u0bcd \u0b8e\u0ba8\u0bcd\u0ba4 \u0bae\u0bbe\u0ba8\u0bbf\u0bb2\u0bae\u0bcd?", "options": ["\u0b95\u0bc7\u0bb0\u0bb3\u0bbe", "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd\u0ba8\u0bbe\u0b9f\u0bc1", "\u0b86\u0ba8\u0bcd\u0ba4\u0bbf\u0bb0\u0bbe", "\u0b92\u0b9f\u0bbf\u0b9a\u0bbe"]}, "ans": 1, "exp_en": "Tamil Nadu.", "exp_ta": "\u0ba4\u0bae\u0bbf\u0bb4\u0bcd\u0ba8\u0bbe\u0b9f\u0bc1."}, {"en": {"q": "Nagara style architecture is famous in?", "options": ["North India", "South India", "East India", "West India"]}, "ta": {"q": "\u0ba8\u0b95\u0bb0\u0bbe \u0baa\u0bbe\u0ba3\u0bbf \u0b8e\u0b99\u0bcd\u0b95\u0bc1 \u0baa\u0bbf\u0bb0\u0baa\u0bb2\u0bae\u0bcd?", "options": ["\u0bb5\u0b9f \u0b87\u0ba8\u0bcd\u0ba4\u0bbf\u0baf\u0bbe", "\u0ba4\u0bc6\u0ba9\u0bcd \u0b87\u0ba8\u0bcd\u0ba4\u0bbf\u0baf\u0bbe", "\u0b95\u0bbf\u0bb4\u0b95\u0bcd\u0b95\u0bc1 \u0b87\u0ba8\u0bcd\u0ba4\u0bbf\u0baf\u0bbe", "\u0bae\u0bc7\u0bb1\u0bcd\u0b95\u0bc1 \u0b87\u0ba8\u0bcd\u0ba4\u0bbf\u0baf\u0bbe"]}, "ans": 0, "exp_en": "North India.", "exp_ta": "\u0bb5\u0b9f \u0b87\u0ba8\u0bcd\u0ba4\u0bbf\u0baf\u0bbe."}, {"en": {"q": "Ajanta Caves are in?", "options": ["Gujarat", "Maharashtra", "MP", "UP"]}, "ta": {"q": "\u0b85\u0b9c\u0ba8\u0bcd\u0ba4\u0bbe \u0b95\u0bc1\u0b95\u0bc8\u0b95\u0bb3\u0bcd \u0b8e\u0b99\u0bcd\u0b95\u0bc1\u0bb3\u0bcd\u0bb3\u0ba9?", "options": ["\u0b95\u0bc1\u0b9c\u0bb0\u0bbe\u0ba4\u0bcd", "\u0bae\u0b95\u0bbe\u0bb0\u0bbe\u0bb7\u0bcd\u0b9f\u0bbf\u0bb0\u0bbe", "\u0bae.\u0baa\u0bbf", "\u0b89.\u0baa\u0bbf"]}, "ans": 1, "exp_en": "Maharashtra.", "exp_ta": "\u0bae\u0b95\u0bbe\u0bb0\u0bbe\u0bb7\u0bcd\u0b9f\u0bbf\u0bb0\u0bbe."}, {"en": {"q": "Kathak is a classical dance of?", "options": ["Kerala", "UP", "Assam", "Manipur"]}, "ta": {"q": "\u0b95\u0ba4\u0b95\u0bcd \u0b8e\u0ba8\u0bcd\u0ba4 \u0bae\u0bbe\u0ba8\u0bbf\u0bb2\u0ba4\u0bcd\u0ba4\u0bbf\u0ba9\u0bcd \u0ba8\u0b9f\u0ba9\u0bae\u0bcd?", "options": ["\u0b95\u0bc7\u0bb0\u0bb3\u0bbe", "\u0b89.\u0baa\u0bbf", "\u0b85\u0b9a\u0bbe\u0bae\u0bcd", "\u0bae\u0ba3\u0bbf\u0baa\u0bcd\u0baa\u0bc2\u0bb0\u0bcd"]}, "ans": 1, "exp_en": "Uttar Pradesh (North India).", "exp_ta": "\u0b89\u0ba4\u0bcd\u0ba4\u0bb0\u0baa\u0bcd \u0baa\u0bbf\u0bb0\u0ba4\u0bc7\u0b9a\u0bae\u0bcd."}, {"en": {"q": "Brihadeshwara Temple is built in which style?", "options": ["Nagara", "Dravida", "Vesara", "Pala"]}, "ta": {"q": "\u0baa\u0bbf\u0bb0\u0b95\u0ba4\u0bc0\u0bb8\u0bcd\u0bb5\u0bb0\u0bb0\u0bcd \u0b95\u0bcb\u0baf\u0bbf\u0bb2\u0bcd \u0b8e\u0ba8\u0bcd\u0ba4 \u0baa\u0bbe\u0ba3\u0bbf?", "options": ["\u0ba8\u0b95\u0bb0\u0bbe", "\u0ba4\u0bbf\u0bb0\u0bbe\u0bb5\u0bbf\u0b9f", "\u0bb5\u0bc7\u0b9a\u0bb0\u0bbe", "\u0baa\u0bbe\u0bb2\u0bbe"]}, "ans": 1, "exp_en": "Dravida style.", "exp_ta": "\u0ba4\u0bbf\u0bb0\u0bbe\u0bb5\u0bbf\u0b9f \u0baa\u0bbe\u0ba3\u0bbf."}], "ncert_geo": [{"en": {"q": "Thickest layer of Earth?", "options": ["Crust", "Mantle", "Core", "Atmosphere"]}, "ta": {"q": "\u0baa\u0bc2\u0bae\u0bbf\u0baf\u0bbf\u0ba9\u0bcd \u0ba4\u0b9f\u0bbf\u0bae\u0ba9\u0bbe\u0ba9 \u0b85\u0b9f\u0bc1\u0b95\u0bcd\u0b95\u0bc1?", "options": ["\u0bae\u0bc7\u0bb2\u0bcb\u0b9f\u0bc1", "\u0bae\u0bc2\u0b9f\u0b95\u0bae\u0bcd", "\u0b95\u0bb0\u0bc1", "\u0bb5\u0bb3\u0bbf\u0bae\u0ba3\u0bcd\u0b9f\u0bb2\u0bae\u0bcd"]}, "ans": 1, "exp_en": "Mantle.", "exp_ta": "\u0bae\u0bc2\u0b9f\u0b95\u0bae\u0bcd."}, {"en": {"q": "Lowest layer of atmosphere?", "options": ["Troposphere", "Stratosphere", "Mesosphere", "Thermosphere"]}, "ta": {"q": "\u0bb5\u0bb3\u0bbf\u0bae\u0ba3\u0bcd\u0b9f\u0bb2\u0ba4\u0bcd\u0ba4\u0bbf\u0ba9\u0bcd \u0bae\u0bbf\u0b95\u0b95\u0bcd \u0b95\u0bc1\u0bb1\u0bc8\u0ba8\u0bcd\u0ba4 \u0b85\u0b9f\u0bc1\u0b95\u0bcd\u0b95\u0bc1?", "options": ["\u0b9f\u0bcd\u0bb0\u0bcb\u0baa\u0bcb\u0bb8\u0bcd\u0baa\u0bbf\u0baf\u0bb0\u0bcd", "\u0bb8\u0bcd\u0b9f\u0bcd\u0bb0\u0bbe\u0b9f\u0bcb\u0bb8\u0bcd\u0baa\u0bbf\u0baf\u0bb0\u0bcd", "\u0bae\u0bc0\u0b9a\u0bcb\u0bb8\u0bcd\u0baa\u0bbf\u0baf\u0bb0\u0bcd", "\u0ba4\u0bc6\u0bb0\u0bcd\u0bae\u0bcb\u0bb8\u0bcd\u0baa\u0bbf\u0baf\u0bb0\u0bcd"]}, "ans": 0, "exp_en": "Troposphere.", "exp_ta": "\u0b9f\u0bcd\u0bb0\u0bcb\u0baa\u0bcb\u0bb8\u0bcd\u0baa\u0bbf\u0baf\u0bb0\u0bcd."}, {"en": {"q": "Ozone layer is in?", "options": ["Troposphere", "Stratosphere", "Mesosphere", "Exosphere"]}, "ta": {"q": "\u0b93\u0b9a\u0bcb\u0ba9\u0bcd \u0baa\u0b9f\u0bb2\u0bae\u0bcd \u0b8e\u0b99\u0bcd\u0b95\u0bc1\u0bb3\u0bcd\u0bb3\u0ba4\u0bc1?", "options": ["\u0b9f\u0bcd\u0bb0\u0bcb\u0baa\u0bcb\u0bb8\u0bcd\u0baa\u0bbf\u0baf\u0bb0\u0bcd", "\u0bb8\u0bcd\u0b9f\u0bcd\u0bb0\u0bbe\u0b9f\u0bcb\u0bb8\u0bcd\u0baa\u0bbf\u0baf\u0bb0\u0bcd", "\u0bae\u0bc0\u0b9a\u0bcb\u0bb8\u0bcd\u0baa\u0bbf\u0baf\u0bb0\u0bcd", "\u0b8e\u0b95\u0bcd\u0bb8\u0bcb\u0bb8\u0bcd\u0baa\u0bbf\u0baf\u0bb0\u0bcd"]}, "ans": 1, "exp_en": "Stratosphere.", "exp_ta": "\u0bb8\u0bcd\u0b9f\u0bcd\u0bb0\u0bbe\u0b9f\u0bcb\u0bb8\u0bcd\u0baa\u0bbf\u0baf\u0bb0\u0bcd."}, {"en": {"q": "Most abundant gas in atmosphere?", "options": ["Oxygen", "Nitrogen", "Argon", "CO2"]}, "ta": {"q": "\u0bb5\u0bb3\u0bbf\u0bae\u0ba3\u0bcd\u0b9f\u0bb2\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd \u0b85\u0ba4\u0bbf\u0b95\u0bae\u0bc1\u0bb3\u0bcd\u0bb3 \u0bb5\u0bbe\u0baf\u0bc1?", "options": ["\u0b86\u0b95\u0bcd\u0bb8\u0bbf\u0b9c\u0ba9\u0bcd", "\u0ba8\u0bc8\u0b9f\u0bcd\u0bb0\u0b9c\u0ba9\u0bcd", "\u0b86\u0bb0\u0bcd\u0b95\u0bbe\u0ba9\u0bcd", "CO2"]}, "ans": 1, "exp_en": "Nitrogen (78%).", "exp_ta": "\u0ba8\u0bc8\u0b9f\u0bcd\u0bb0\u0b9c\u0ba9\u0bcd (78%)."}, {"en": {"q": "Instrument to measure earthquake?", "options": ["Barometer", "Seismograph", "Thermometer", "Hygrometer"]}, "ta": {"q": "\u0baa\u0bc2\u0b95\u0bae\u0bcd\u0baa\u0ba4\u0bcd\u0ba4\u0bc8 \u0b85\u0bb3\u0bb5\u0bbf\u0b9f\u0bc1\u0bae\u0bcd \u0b95\u0bb0\u0bc1\u0bb5\u0bbf?", "options": ["\u0baa\u0bb0\u0bcb\u0bae\u0bc0\u0b9f\u0bcd\u0b9f\u0bb0\u0bcd", "\u0b9a\u0bc0\u0bb8\u0bcd\u0bae\u0bcb\u0b95\u0bbf\u0bb0\u0bbe\u0baa\u0bcd", "\u0ba4\u0bc6\u0bb0\u0bcd\u0bae\u0bcb\u0bae\u0bc0\u0b9f\u0bcd\u0b9f\u0bb0\u0bcd", "\u0bb9\u0bc8\u0b95\u0bcd\u0bb0\u0bcb\u0bae\u0bc0\u0b9f\u0bcd\u0b9f\u0bb0\u0bcd"]}, "ans": 1, "exp_en": "Seismograph.", "exp_ta": "\u0b9a\u0bc0\u0bb8\u0bcd\u0bae\u0bcb\u0b95\u0bbf\u0bb0\u0bbe\u0baa\u0bcd."}], "std_geo": [{"en": {"q": "El Nino is a?", "options": ["Cold current", "Warm current", "Wind", "Mountain"]}, "ta": {"q": "\u0b8e\u0bb2\u0bcd \u0ba8\u0bbf\u0ba9\u0bcb \u0b8e\u0ba9\u0bcd\u0baa\u0ba4\u0bc1?", "options": ["\u0b95\u0bc1\u0bb3\u0bbf\u0bb0\u0bcd\u0ba8\u0bcd\u0ba4 \u0ba8\u0bc0\u0bb0\u0bcb\u0b9f\u0bcd\u0b9f\u0bae\u0bcd", "\u0bb5\u0bc6\u0baa\u0bcd\u0baa \u0ba8\u0bc0\u0bb0\u0bcb\u0b9f\u0bcd\u0b9f\u0bae\u0bcd", "\u0b95\u0bbe\u0bb1\u0bcd\u0bb1\u0bc1", "\u0bae\u0bb2\u0bc8"]}, "ans": 1, "exp_en": "Warm ocean current.", "exp_ta": "\u0bb5\u0bc6\u0baa\u0bcd\u0baa \u0b95\u0b9f\u0bb2\u0bcd \u0ba8\u0bc0\u0bb0\u0bcb\u0b9f\u0bcd\u0b9f\u0bae\u0bcd."}, {"en": {"q": "Highest peak in India?", "options": ["Everest", "K2", "Kanchenjunga", "Nanda Devi"]}, "ta": {"q": "\u0b87\u0ba8\u0bcd\u0ba4\u0bbf\u0baf\u0bbe\u0bb5\u0bbf\u0ba9\u0bcd \u0bae\u0bbf\u0b95 \u0b89\u0baf\u0bb0\u0bcd\u0ba8\u0bcd\u0ba4 \u0b9a\u0bbf\u0b95\u0bb0\u0bae\u0bcd?", "options": ["\u0b8e\u0bb5\u0bb0\u0bc6\u0bb8\u0bcd\u0b9f\u0bcd", "K2", "\u0b95\u0b9e\u0bcd\u0b9a\u0ba9\u0bcd\u0b9c\u0b99\u0bcd\u0b95\u0bbe", "\u0ba8\u0ba8\u0bcd\u0ba4\u0bbe \u0ba4\u0bc7\u0bb5\u0bbf"]}, "ans": 2, "exp_en": "Kanchenjunga (K2 is in PoK).", "exp_ta": "\u0b95\u0b9e\u0bcd\u0b9a\u0ba9\u0bcd\u0b9c\u0b99\u0bcd\u0b95\u0bbe."}, {"en": {"q": "Which river crosses Equator twice?", "options": ["Amazon", "Nile", "Congo", "Ganga"]}, "ta": {"q": "\u0baa\u0bc2\u0bae\u0ba4\u0bcd\u0ba4\u0bbf\u0baf \u0bb0\u0bc7\u0b95\u0bc8\u0baf\u0bc8 \u0b87\u0bb0\u0bc1\u0bae\u0bc1\u0bb1\u0bc8 \u0b95\u0b9f\u0b95\u0bcd\u0b95\u0bc1\u0bae\u0bcd \u0ba8\u0ba4\u0bbf?", "options": ["\u0b85\u0bae\u0bc7\u0b9a\u0bbe\u0ba9\u0bcd", "\u0ba8\u0bc8\u0bb2\u0bcd", "\u0b95\u0bbe\u0b99\u0bcd\u0b95\u0bcb", "\u0b95\u0b99\u0bcd\u0b95\u0bc8"]}, "ans": 2, "exp_en": "Congo river in Africa.", "exp_ta": "\u0b86\u0baa\u0bcd\u0baa\u0bbf\u0bb0\u0bbf\u0b95\u0bcd\u0b95\u0bbe\u0bb5\u0bbf\u0ba9\u0bcd \u0b95\u0bbe\u0b99\u0bcd\u0b95\u0bcb \u0ba8\u0ba4\u0bbf."}, {"en": {"q": "Roaring Forties are?", "options": ["Mountains", "Winds", "Rivers", "Islands"]}, "ta": {"q": "\u0bb0\u0bcb\u0bb0\u0bbf\u0b99\u0bcd \u0b83\u0baa\u0bbe\u0bb0\u0bcd\u0b9f\u0bc0\u0bb8\u0bcd \u0b8e\u0ba9\u0bcd\u0baa\u0ba4\u0bc1?", "options": ["\u0bae\u0bb2\u0bc8\u0b95\u0bb3\u0bcd", "\u0b95\u0bbe\u0bb1\u0bcd\u0bb1\u0bc1\u0b95\u0bb3\u0bcd", "\u0ba8\u0ba4\u0bbf\u0b95\u0bb3\u0bcd", "\u0ba4\u0bc0\u0bb5\u0bc1\u0b95\u0bb3\u0bcd"]}, "ans": 1, "exp_en": "Strong westerly winds.", "exp_ta": "\u0bb5\u0bb2\u0bc1\u0bb5\u0bbe\u0ba9 \u0bae\u0bc7\u0bb1\u0bcd\u0b95\u0bc1 \u0b95\u0bbe\u0bb1\u0bcd\u0bb1\u0bc1\u0b95\u0bb3\u0bcd."}, {"en": {"q": "Largest ocean?", "options": ["Atlantic", "Indian", "Arctic", "Pacific"]}, "ta": {"q": "\u0bae\u0bbf\u0b95\u0baa\u0bcd\u0baa\u0bc6\u0bb0\u0bbf\u0baf \u0baa\u0bc6\u0bb0\u0bc1\u0b99\u0bcd\u0b95\u0b9f\u0bb2\u0bcd?", "options": ["\u0b85\u0b9f\u0bcd\u0bb2\u0bbe\u0ba3\u0bcd\u0b9f\u0bbf\u0b95\u0bcd", "\u0b87\u0ba8\u0bcd\u0ba4\u0bbf\u0baf", "\u0b86\u0bb0\u0bcd\u0b95\u0bcd\u0b9f\u0bbf\u0b95\u0bcd", "\u0baa\u0b9a\u0bbf\u0baa\u0bbf\u0b95\u0bcd"]}, "ans": 3, "exp_en": "Pacific Ocean.", "exp_ta": "\u0baa\u0b9a\u0bbf\u0baa\u0bbf\u0b95\u0bcd \u0baa\u0bc6\u0bb0\u0bc1\u0b99\u0bcd\u0b95\u0b9f\u0bb2\u0bcd."}], "ncert_eco": [{"en": {"q": "GDP includes?", "options": ["Final goods", "Intermediate goods", "Both", "None"]}, "ta": {"q": "GDP \u0b8e\u0ba4\u0bc8 \u0b89\u0bb3\u0bcd\u0bb3\u0b9f\u0b95\u0bcd\u0b95\u0bbf\u0baf\u0ba4\u0bc1?", "options": ["\u0b87\u0bb1\u0bc1\u0ba4\u0bbf\u0baa\u0bcd \u0baa\u0bca\u0bb0\u0bc1\u0b9f\u0bcd\u0b95\u0bb3\u0bcd", "\u0b87\u0b9f\u0bc8\u0ba8\u0bbf\u0bb2\u0bc8 \u0baa\u0bca\u0bb0\u0bc1\u0b9f\u0bcd\u0b95\u0bb3\u0bcd", "\u0b87\u0bb0\u0ba3\u0bcd\u0b9f\u0bc1\u0bae\u0bcd", "\u0b8e\u0ba4\u0bc1\u0bb5\u0bc1\u0bae\u0bbf\u0bb2\u0bcd\u0bb2\u0bc8"]}, "ans": 0, "exp_en": "Final goods only.", "exp_ta": "\u0b87\u0bb1\u0bc1\u0ba4\u0bbf\u0baa\u0bcd \u0baa\u0bca\u0bb0\u0bc1\u0b9f\u0bcd\u0b95\u0bb3\u0bcd \u0bae\u0b9f\u0bcd\u0b9f\u0bc1\u0bae\u0bc7."}, {"en": {"q": "Agriculture comes under?", "options": ["Primary sector", "Secondary sector", "Tertiary sector", "Quaternary"]}, "ta": {"q": "\u0bb5\u0bbf\u0bb5\u0b9a\u0bbe\u0baf\u0bae\u0bcd \u0b8e\u0ba8\u0bcd\u0ba4\u0ba4\u0bcd \u0ba4\u0bc1\u0bb1\u0bc8\u0baf\u0bbf\u0ba9\u0bcd \u0b95\u0bc0\u0bb4\u0bcd \u0bb5\u0bb0\u0bc1\u0b95\u0bbf\u0bb1\u0ba4\u0bc1?", "options": ["\u0bae\u0bc1\u0ba4\u0ba9\u0bcd\u0bae\u0bc8", "\u0b87\u0bb0\u0ba3\u0bcd\u0b9f\u0bbe\u0bae\u0bcd \u0ba8\u0bbf\u0bb2\u0bc8", "\u0bae\u0bc2\u0ba9\u0bcd\u0bb1\u0bbe\u0bae\u0bcd \u0ba8\u0bbf\u0bb2\u0bc8", "\u0ba8\u0bbe\u0ba9\u0bcd\u0b95\u0bbe\u0bae\u0bcd \u0ba8\u0bbf\u0bb2\u0bc8"]}, "ans": 0, "exp_en": "Primary sector.", "exp_ta": "\u0bae\u0bc1\u0ba4\u0ba9\u0bcd\u0bae\u0bc8\u0ba4\u0bcd \u0ba4\u0bc1\u0bb1\u0bc8."}, {"en": {"q": "Father of Economics?", "options": ["Keynes", "Adam Smith", "Marx", "Amartya Sen"]}, "ta": {"q": "\u0baa\u0bca\u0bb0\u0bc1\u0bb3\u0bbe\u0ba4\u0bbe\u0bb0\u0ba4\u0bcd\u0ba4\u0bbf\u0ba9\u0bcd \u0ba4\u0ba8\u0bcd\u0ba4\u0bc8?", "options": ["\u0b95\u0bc0\u0ba9\u0bcd\u0bb8\u0bcd", "\u0b86\u0b9f\u0bae\u0bcd \u0bb8\u0bcd\u0bae\u0bbf\u0ba4\u0bcd", "\u0bae\u0bbe\u0bb0\u0bcd\u0b95\u0bcd\u0bb8\u0bcd", "\u0b85\u0bae\u0bb0\u0bcd\u0ba4\u0bcd\u0ba4\u0bbf\u0baf\u0bbe \u0b9a\u0bc6\u0ba9\u0bcd"]}, "ans": 1, "exp_en": "Adam Smith.", "exp_ta": "\u0b86\u0b9f\u0bae\u0bcd \u0bb8\u0bcd\u0bae\u0bbf\u0ba4\u0bcd."}, {"en": {"q": "Service sector is also called?", "options": ["Primary", "Secondary", "Tertiary", "Quinary"]}, "ta": {"q": "\u0b9a\u0bc7\u0bb5\u0bc8\u0ba4\u0bcd \u0ba4\u0bc1\u0bb1\u0bc8 \u0b8e\u0ba9\u0bcd\u0baa\u0ba4\u0bc1?", "options": ["\u0bae\u0bc1\u0ba4\u0ba9\u0bcd\u0bae\u0bc8", "\u0b87\u0bb0\u0ba3\u0bcd\u0b9f\u0bbe\u0bae\u0bcd \u0ba8\u0bbf\u0bb2\u0bc8", "\u0bae\u0bc2\u0ba9\u0bcd\u0bb1\u0bbe\u0bae\u0bcd \u0ba8\u0bbf\u0bb2\u0bc8", "\u0b90\u0ba8\u0bcd\u0ba4\u0bbe\u0bae\u0bcd \u0ba8\u0bbf\u0bb2\u0bc8"]}, "ans": 2, "exp_en": "Tertiary sector.", "exp_ta": "\u0bae\u0bc2\u0ba9\u0bcd\u0bb1\u0bbe\u0bae\u0bcd \u0ba8\u0bbf\u0bb2\u0bc8 \u0ba4\u0bc1\u0bb1\u0bc8."}, {"en": {"q": "Inflation means?", "options": ["Rise in prices", "Fall in prices", "No change", "None"]}, "ta": {"q": "\u0baa\u0ba3\u0bb5\u0bc0\u0b95\u0bcd\u0b95\u0bae\u0bcd \u0b8e\u0ba9\u0bcd\u0bb1\u0bbe\u0bb2\u0bcd \u0b8e\u0ba9\u0bcd\u0ba9?", "options": ["\u0bb5\u0bbf\u0bb2\u0bc8 \u0b89\u0baf\u0bb0\u0bcd\u0bb5\u0bc1", "\u0bb5\u0bbf\u0bb2\u0bc8 \u0bb5\u0bc0\u0bb4\u0bcd\u0b9a\u0bcd\u0b9a\u0bbf", "\u0bae\u0bbe\u0bb1\u0bcd\u0bb1\u0bae\u0bbf\u0bb2\u0bcd\u0bb2\u0bc8", "\u0b8e\u0ba4\u0bc1\u0bb5\u0bc1\u0bae\u0bbf\u0bb2\u0bcd\u0bb2\u0bc8"]}, "ans": 0, "exp_en": "General rise in prices.", "exp_ta": "\u0bb5\u0bbf\u0bb2\u0bc8 \u0b89\u0baf\u0bb0\u0bcd\u0bb5\u0bc1."}], "std_eco": [{"en": {"q": "Who controls Monetary Policy in India?", "options": ["Finance Ministry", "SBI", "RBI", "SEBI"]}, "ta": {"q": "\u0b87\u0ba8\u0bcd\u0ba4\u0bbf\u0baf\u0bbe\u0bb5\u0bbf\u0bb2\u0bcd \u0baa\u0ba3\u0bb5\u0bbf\u0baf\u0bb2\u0bcd \u0b95\u0bca\u0bb3\u0bcd\u0b95\u0bc8\u0baf\u0bc8 \u0b95\u0b9f\u0bcd\u0b9f\u0bc1\u0baa\u0bcd\u0baa\u0b9f\u0bc1\u0ba4\u0bcd\u0ba4\u0bc1\u0bb5\u0ba4\u0bc1 \u0baf\u0bbe\u0bb0\u0bcd?", "options": ["\u0ba8\u0bbf\u0ba4\u0bbf \u0b85\u0bae\u0bc8\u0b9a\u0bcd\u0b9a\u0b95\u0bae\u0bcd", "SBI", "RBI", "SEBI"]}, "ans": 2, "exp_en": "Reserve Bank of India.", "exp_ta": "\u0b87\u0ba8\u0bcd\u0ba4\u0bbf\u0baf \u0bb0\u0bbf\u0b9a\u0bb0\u0bcd\u0bb5\u0bcd \u0bb5\u0b99\u0bcd\u0b95\u0bbf."}, {"en": {"q": "What is Repo Rate?", "options": ["Rate at which banks lend to public", "Rate at which RBI lends to banks", "Rate at which RBI borrows", "Tax rate"]}, "ta": {"q": "\u0bb0\u0bc6\u0baa\u0bcd\u0baa\u0bcb \u0bb5\u0b9f\u0bcd\u0b9f\u0bbf \u0bb5\u0bbf\u0b95\u0bbf\u0ba4\u0bae\u0bcd \u0b8e\u0ba9\u0bcd\u0bb1\u0bbe\u0bb2\u0bcd \u0b8e\u0ba9\u0bcd\u0ba9?", "options": ["\u0bb5\u0b99\u0bcd\u0b95\u0bbf\u0b95\u0bb3\u0bcd \u0baa\u0bca\u0ba4\u0bc1\u0bae\u0b95\u0bcd\u0b95\u0bb3\u0bc1\u0b95\u0bcd\u0b95\u0bc1 \u0b95\u0b9f\u0ba9\u0bcd \u0bb5\u0bb4\u0b99\u0bcd\u0b95\u0bc1\u0bae\u0bcd \u0bb5\u0bbf\u0b95\u0bbf\u0ba4\u0bae\u0bcd", "RBI \u0bb5\u0b99\u0bcd\u0b95\u0bbf\u0b95\u0bb3\u0bc1\u0b95\u0bcd\u0b95\u0bc1 \u0b95\u0b9f\u0ba9\u0bcd \u0bb5\u0bb4\u0b99\u0bcd\u0b95\u0bc1\u0bae\u0bcd \u0bb5\u0bbf\u0b95\u0bbf\u0ba4\u0bae\u0bcd", "RBI \u0b95\u0b9f\u0ba9\u0bcd \u0bb5\u0bbe\u0b99\u0bcd\u0b95\u0bc1\u0bae\u0bcd \u0bb5\u0bbf\u0b95\u0bbf\u0ba4\u0bae\u0bcd", "\u0bb5\u0bb0\u0bbf \u0bb5\u0bbf\u0b95\u0bbf\u0ba4\u0bae\u0bcd"]}, "ans": 1, "exp_en": "Rate at which RBI lends to commercial banks.", "exp_ta": "RBI \u0bb5\u0b99\u0bcd\u0b95\u0bbf\u0b95\u0bb3\u0bc1\u0b95\u0bcd\u0b95\u0bc1 \u0b95\u0b9f\u0ba9\u0bcd \u0bb5\u0bb4\u0b99\u0bcd\u0b95\u0bc1\u0bae\u0bcd \u0bb5\u0bbf\u0b95\u0bbf\u0ba4\u0bae\u0bcd."}, {"en": {"q": "Fiscal Policy is formulated by?", "options": ["RBI", "Government of India", "SEBI", "NITI Aayog"]}, "ta": {"q": "\u0ba8\u0bbf\u0ba4\u0bbf\u0b95\u0bcd \u0b95\u0bca\u0bb3\u0bcd\u0b95\u0bc8\u0baf\u0bc8 \u0b89\u0bb0\u0bc1\u0bb5\u0bbe\u0b95\u0bcd\u0b95\u0bc1\u0bb5\u0ba4\u0bc1 \u0baf\u0bbe\u0bb0\u0bcd?", "options": ["RBI", "\u0b87\u0ba8\u0bcd\u0ba4\u0bbf\u0baf \u0b85\u0bb0\u0b9a\u0bc1", "SEBI", "NITI \u0b86\u0baf\u0bcb\u0b95\u0bcd"]}, "ans": 1, "exp_en": "Formulated by Ministry of Finance (Govt).", "exp_ta": "\u0b87\u0ba8\u0bcd\u0ba4\u0bbf\u0baf \u0b85\u0bb0\u0b9a\u0bc1."}, {"en": {"q": "GST is which type of tax?", "options": ["Direct", "Indirect", "Corporate", "Wealth"]}, "ta": {"q": "GST \u0b8e\u0bb5\u0bcd\u0bb5\u0b95\u0bc8 \u0bb5\u0bb0\u0bbf?", "options": ["\u0ba8\u0bc7\u0bb0\u0b9f\u0bbf", "\u0bae\u0bb1\u0bc8\u0bae\u0bc1\u0b95", "\u0b95\u0bbe\u0bb0\u0bcd\u0baa\u0bcd\u0baa\u0bb0\u0bc7\u0b9f\u0bcd", "\u0b9a\u0bca\u0ba4\u0bcd\u0ba4\u0bc1"]}, "ans": 1, "exp_en": "Indirect Tax.", "exp_ta": "\u0bae\u0bb1\u0bc8\u0bae\u0bc1\u0b95 \u0bb5\u0bb0\u0bbf."}, {"en": {"q": "Financial Year in India starts from?", "options": ["Jan 1", "April 1", "July 1", "Oct 1"]}, "ta": {"q": "\u0b87\u0ba8\u0bcd\u0ba4\u0bbf\u0baf\u0bbe\u0bb5\u0bbf\u0bb2\u0bcd \u0ba8\u0bbf\u0ba4\u0bbf\u0baf\u0bbe\u0ba3\u0bcd\u0b9f\u0bc1 \u0b8e\u0baa\u0bcd\u0baa\u0bcb\u0ba4\u0bc1 \u0ba4\u0bca\u0b9f\u0b99\u0bcd\u0b95\u0bc1\u0b95\u0bbf\u0bb1\u0ba4\u0bc1?", "options": ["\u0b9c\u0ba9 1", "\u0b8f\u0baa\u0bcd\u0bb0\u0bb2\u0bcd 1", "\u0b9c\u0bc2\u0bb2\u0bc8 1", "\u0b85\u0b95\u0bcd 1"]}, "ans": 1, "exp_en": "April 1 to March 31.", "exp_ta": "\u0b8f\u0baa\u0bcd\u0bb0\u0bb2\u0bcd 1."}], "mains_gs3": [{"en": {"q": "Which body implements Disaster Management at National level?", "options": ["NITI Aayog", "NDMA", "PMO", "Home Ministry"]}, "ta": {"q": "\u0ba4\u0bc7\u0b9a\u0bbf\u0baf \u0b85\u0bb3\u0bb5\u0bbf\u0bb2\u0bcd \u0baa\u0bc7\u0bb0\u0bbf\u0b9f\u0bb0\u0bcd \u0bae\u0bc7\u0bb2\u0bbe\u0ba3\u0bcd\u0bae\u0bc8\u0baf\u0bc8 \u0b9a\u0bc6\u0baf\u0bb2\u0bcd\u0baa\u0b9f\u0bc1\u0ba4\u0bcd\u0ba4\u0bc1\u0bb5\u0ba4\u0bc1?", "options": ["NITI \u0b86\u0baf\u0bcb\u0b95\u0bcd", "NDMA", "PMO", "\u0b89\u0bb3\u0bcd\u0ba4\u0bc1\u0bb1\u0bc8 \u0b85\u0bae\u0bc8\u0b9a\u0bcd\u0b9a\u0b95\u0bae\u0bcd"]}, "ans": 1, "exp_en": "National Disaster Management Authority.", "exp_ta": "NDMA."}, {"en": {"q": "Sendai Framework is related to?", "options": ["Climate Change", "Disaster Risk Reduction", "Cyber Security", "Trade"]}, "ta": {"q": "\u0b9a\u0bc6\u0ba3\u0bcd\u0b9f\u0bbe\u0baf\u0bcd \u0b95\u0b9f\u0bcd\u0b9f\u0bae\u0bc8\u0baa\u0bcd\u0baa\u0bc1 \u0b8e\u0ba4\u0ba9\u0bc1\u0b9f\u0ba9\u0bcd \u0ba4\u0bca\u0b9f\u0bb0\u0bcd\u0baa\u0bc1\u0b9f\u0bc8\u0baf\u0ba4\u0bc1?", "options": ["\u0b95\u0bbe\u0bb2\u0ba8\u0bbf\u0bb2\u0bc8 \u0bae\u0bbe\u0bb1\u0bcd\u0bb1\u0bae\u0bcd", "\u0baa\u0bc7\u0bb0\u0bbf\u0b9f\u0bb0\u0bcd \u0b85\u0baa\u0bbe\u0baf\u0b95\u0bcd \u0b95\u0bc1\u0bb1\u0bc8\u0baa\u0bcd\u0baa\u0bc1", "\u0b9a\u0bc8\u0baa\u0bb0\u0bcd \u0baa\u0bbe\u0ba4\u0bc1\u0b95\u0bbe\u0baa\u0bcd\u0baa\u0bc1", "\u0bb5\u0bb0\u0bcd\u0ba4\u0bcd\u0ba4\u0b95\u0bae\u0bcd"]}, "ans": 1, "exp_en": "Disaster Risk Reduction.", "exp_ta": "\u0baa\u0bc7\u0bb0\u0bbf\u0b9f\u0bb0\u0bcd \u0b85\u0baa\u0bbe\u0baf\u0b95\u0bcd \u0b95\u0bc1\u0bb1\u0bc8\u0baa\u0bcd\u0baa\u0bc1."}, {"en": {"q": "CERT-In deals with?", "options": ["Agriculture", "Cyber Security", "Space", "Education"]}, "ta": {"q": "CERT-In \u0b8e\u0ba4\u0ba9\u0bc1\u0b9f\u0ba9\u0bcd \u0ba4\u0bca\u0b9f\u0bb0\u0bcd\u0baa\u0bc1\u0b9f\u0bc8\u0baf\u0ba4\u0bc1?", "options": ["\u0bb5\u0bbf\u0bb5\u0b9a\u0bbe\u0baf\u0bae\u0bcd", "\u0b9a\u0bc8\u0baa\u0bb0\u0bcd \u0baa\u0bbe\u0ba4\u0bc1\u0b95\u0bbe\u0baa\u0bcd\u0baa\u0bc1", "\u0bb5\u0bbf\u0ba3\u0bcd\u0bb5\u0bc6\u0bb3\u0bbf", "\u0b95\u0bb2\u0bcd\u0bb5\u0bbf"]}, "ans": 1, "exp_en": "Computer Emergency Response Team (Cyber).", "exp_ta": "\u0b9a\u0bc8\u0baa\u0bb0\u0bcd \u0baa\u0bbe\u0ba4\u0bc1\u0b95\u0bbe\u0baa\u0bcd\u0baa\u0bc1."}, {"en": {"q": "Naxalism is a threat to?", "options": ["External Security", "Internal Security", "Cyber Security", "Food Security"]}, "ta": {"q": "\u0ba8\u0b95\u0bcd\u0bb8\u0bb2\u0bbf\u0b9a\u0bae\u0bcd \u0b8e\u0ba4\u0bb1\u0bcd\u0b95\u0bc1 \u0b85\u0b9a\u0bcd\u0b9a\u0bc1\u0bb1\u0bc1\u0ba4\u0bcd\u0ba4\u0bb2\u0bcd?", "options": ["\u0bb5\u0bc6\u0bb3\u0bbf \u0baa\u0bbe\u0ba4\u0bc1\u0b95\u0bbe\u0baa\u0bcd\u0baa\u0bc1", "\u0b89\u0bb3\u0bcd \u0baa\u0bbe\u0ba4\u0bc1\u0b95\u0bbe\u0baa\u0bcd\u0baa\u0bc1", "\u0b9a\u0bc8\u0baa\u0bb0\u0bcd \u0baa\u0bbe\u0ba4\u0bc1\u0b95\u0bbe\u0baa\u0bcd\u0baa\u0bc1", "\u0b89\u0ba3\u0bb5\u0bc1\u0baa\u0bcd \u0baa\u0bbe\u0ba4\u0bc1\u0b95\u0bbe\u0baa\u0bcd\u0baa\u0bc1"]}, "ans": 1, "exp_en": "Internal Security.", "exp_ta": "\u0b89\u0bb3\u0bcd\u0ba8\u0bbe\u0b9f\u0bcd\u0b9f\u0bc1 \u0baa\u0bbe\u0ba4\u0bc1\u0b95\u0bbe\u0baa\u0bcd\u0baa\u0bc1."}, {"en": {"q": "Money laundering is checked by?", "options": ["PMLA", "FEMA", "NDPS", "UAPA"]}, "ta": {"q": "\u0baa\u0ba3\u0bae\u0bcb\u0b9a\u0b9f\u0bbf \u0b8e\u0ba4\u0ba9\u0bbe\u0bb2\u0bcd \u0b95\u0b9f\u0bcd\u0b9f\u0bc1\u0baa\u0bcd\u0baa\u0b9f\u0bc1\u0ba4\u0bcd\u0ba4\u0baa\u0bcd\u0baa\u0b9f\u0bc1\u0b95\u0bbf\u0bb1\u0ba4\u0bc1?", "options": ["PMLA", "FEMA", "NDPS", "UAPA"]}, "ans": 0, "exp_en": "Prevention of Money Laundering Act.", "exp_ta": "PMLA \u0b9a\u0b9f\u0bcd\u0b9f\u0bae\u0bcd."}]};
+    var LIB = [{"type": "pdf", "title": "UPSC Prelims 2023 GS Paper 1", "url": "https://upsc.gov.in/sites/default/files/QP-CSPE-23-GS1-280523.pdf", "desc": "Official UPSC PDF"}, {"type": "pdf", "title": "UPSC Prelims 2022 GS Paper 1", "url": "https://upsc.gov.in/sites/default/files/QP-CSP-22-GS1-050622.pdf", "desc": "Official UPSC PDF"}, {"type": "pdf", "title": "UPSC Prelims 2021 GS Paper 1", "url": "https://upsc.gov.in/sites/default/files/QP-CSP-21-GS1-101021.pdf", "desc": "Official UPSC PDF"}, {"type": "book", "title": "NCERT Class 11 - Indian Constitution", "url": "https://ncert.nic.in/textbook.php?keps2=0-10", "desc": "Free Official Book"}, {"type": "book", "title": "NCERT Class 11 - Physical Geography", "url": "https://ncert.nic.in/textbook.php?kegy2=0-16", "desc": "Free Official Book"}, {"type": "book", "title": "NCERT Class 12 - Macroeconomics", "url": "https://ncert.nic.in/textbook.php?leec1=0-6", "desc": "Free Official Book"}];
     
-    var done = JSON.parse(localStorage.getItem('upscDone3')||'{}');
+    var RM_DATA = [
+      { en: { title:"Step 1: The Foundation (Months 1-3)", desc:"Read Class 6-12 NCERTs like a storybook. Do not make notes yet. Read The Hindu daily." }, ta: { title:"படி 1: அடிப்படை (மாதங்கள் 1-3)", desc:"6-12 ஆம் வகுப்பு NCERT-களை கதைப்புத்தகம் போல படிக்கவும். குறிப்புகள் எடுக்க வேண்டாம்." } },
+      { en: { title:"Step 2: Core Subjects (Months 4-8)", desc:"Start standard books like Laxmikanth for Polity. Begin making short notes." }, ta: { title:"படி 2: முக்கிய பாடங்கள் (மாதங்கள் 4-8)", desc:"லக்ஷ்மிகாந்த் போன்ற நிலையான புத்தகங்களைத் தொடங்கவும். குறுகிய குறிப்புகளை எடுக்கத் தொடங்குங்கள்." } },
+      { en: { title:"Step 3: Mains (Months 9-10)", desc:"Complete Optional subject. Write 2 Mains answers daily." }, ta: { title:"படி 3: மெயின்ஸ் (மாதங்கள் 9-10)", desc:"விருப்பப் பாடத்தை முடிக்கவும். தினமும் 2 மெயின்ஸ் பதில்களை எழுதத் தொடங்குங்கள்." } },
+      { en: { title:"Step 4: Prelims Mode (Months 11-12)", desc:"Focus 100% on Prelims MCQs and CSAT." }, ta: { title:"படி 4: பிரிலிம்ஸ் (மாதங்கள் 11-12)", desc:"100% பிரிலிம்ஸ் MCQ களில் கவனம் செலுத்துங்கள்." } }
+    ];
+    
+    var done = JSON.parse(localStorage.getItem('upscDone5')||'{}');
     var curTopic = "";
     var curLang = "en"; 
-    
+    var rmLang = "en";
+    var viewState = "notes";
     var qIndex = 0;
     var score = 0;
+    var isAnswered = false;
     
     function goPage(id){
       document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
       document.getElementById(id).classList.add('active');
-      document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
-      var nv = id.replace('pg-', 'nav-');
-      if(document.getElementById(nv)) document.getElementById(nv).classList.add('active');
       window.scrollTo(0,0);
     }
     
-    function openRoadmap(){ document.getElementById('roadmap-ui').style.display = 'flex'; }
+    function openRoadmap(){ document.getElementById('roadmap-ui').style.display = 'flex'; renderRoadmap(); }
     function closeRoadmap(){ document.getElementById('roadmap-ui').style.display = 'none'; }
+    function toggleRmLang(){
+      rmLang = (rmLang === "en") ? "ta" : "en";
+      document.getElementById('rm-btn-lang').textContent = (rmLang === "en") ? "A / அ (TA)" : "A / அ (EN)";
+      renderRoadmap();
+    }
+    function renderRoadmap(){
+      var html = "";
+      RM_DATA.forEach(r => {
+        var d = r[rmLang];
+        html += `<div class="tl-cont"><div class="tl-box"><h4>${d.title}</h4><p>${d.desc}</p></div></div>`;
+      });
+      document.getElementById('rm-content').innerHTML = html;
+    }
     
     function renderApp(){
-      // Syllabus
       var schHtml = "";
       Object.keys(SUBS_MAP).forEach(k => {
         var p = SUBS_MAP[k];
-        schHtml += `<div class="glass card" style="margin-bottom:15px;">
-          <h3 style="font-size:16px; margin-bottom:15px;">${p.title}</h3>`;
-        
+        schHtml += `<div class="glass card">
+          <h3 style="font-size:16px;">${p.title}</h3>`;
         p.topics.forEach(t => {
           var isD = done[t] ? 'done' : '';
-          var c = done[t] ? '✓ Mastered' : 'Daily Test Pending';
+          var c = done[t] ? '✓ Mastered' : 'Test Pending';
           var col = done[t] ? 'var(--suc)' : '#94a3b8';
           schHtml += `<div class="topic-row ${isD}" id="sch-r-${t}" onclick="openReader('${t}')">
             <span style="font-weight:600; font-size:14px;">${TOPICS[t].title}</span>
@@ -232,19 +242,17 @@
       });
       document.getElementById('sch-content').innerHTML = schHtml;
       
-      // Library
       var lH = "";
       LIB.forEach(l => {
         var ico = l.type === "pdf" ? "📄" : "📙";
         lH += `<div class="lib-card">
           <div style="display:flex; align-items:center;">
-            <div class="lib-ico">${ico}</div>
+            <div style="font-size:24px; margin-right:15px;">${ico}</div>
             <div>
-              <p style="font-weight:600; font-size:14px; margin-bottom:4px;">${l.title}</p>
-              <p style="font-size:12px; color:#94a3b8;">${l.desc}</p>
+              <p style="font-weight:600; font-size:13px; margin-bottom:4px;">${l.title}</p>
             </div>
           </div>
-          <a href="${l.url}" target="_blank" class="btn" style="padding:8px 15px; font-size:12px;">Download</a>
+          <a href="${l.url}" target="_blank" class="btn" style="padding:6px 12px; font-size:11px;">Link</a>
         </div>`;
       });
       document.getElementById('lib-content').innerHTML = lH;
@@ -255,7 +263,7 @@
     function updateProgress(){
       var tot = 0;
       Object.keys(done).forEach(k => { if(done[k]) tot++; });
-      document.getElementById('h-done').textContent = tot;
+      document.getElementById('h-done').textContent = `${tot} / 11 Mastered`;
       
       Object.keys(done).forEach(t => {
         if(done[t]){
@@ -267,110 +275,115 @@
       });
     }
     
-    // READER
     function openReader(t){
-      curTopic = t;
-      curLang = "en";
+      curTopic = t; curLang = "en"; viewState = "notes";
       document.getElementById('btn-lang').textContent = "A / அ (TA)";
       document.getElementById('r-title').textContent = TOPICS[t].title;
       document.getElementById('view-notes').style.display = 'flex';
       document.getElementById('view-test').style.display = 'none';
       document.getElementById('reader-ui').style.display = 'flex';
-      document.getElementById('r-text').innerHTML = TOPICS[curTopic][curLang];
+      renderContent();
     }
+    
     function toggleLang(){
       curLang = (curLang === "en") ? "ta" : "en";
       document.getElementById('btn-lang').textContent = (curLang === "en") ? "A / அ (TA)" : "A / அ (EN)";
-      document.getElementById('r-text').innerHTML = TOPICS[curTopic][curLang];
+      renderContent();
     }
+    
+    function renderContent(){
+      if(viewState === "notes") {
+        document.getElementById('r-text').innerHTML = TOPICS[curTopic][curLang];
+      } else if (viewState === "test") {
+        renderQuestion(false);
+      }
+    }
+    
     function closeReader(){ document.getElementById('reader-ui').style.display = 'none'; }
     
-    // TEST
     function startTest(){
-      qIndex = 0; score = 0;
+      qIndex = 0; score = 0; viewState = "test"; isAnswered = false;
       document.getElementById('view-notes').style.display = 'none';
       document.getElementById('view-test').style.display = 'flex';
-      showQuestion();
+      renderQuestion(true);
     }
-    function showQuestion(){
+    
+    function renderQuestion(isNew){
       var qs = QBANK[curTopic];
       if(qIndex >= qs.length){ endTest(); return; }
-      var q = qs[qIndex];
+      
+      var qFull = qs[qIndex];
+      var qLang = qFull[curLang];
+      
       document.getElementById('qt-counter').textContent = `Question ${qIndex+1} of ${qs.length}`;
-      document.getElementById('qt-text').innerHTML = q.q;
+      document.getElementById('qt-text').innerHTML = qLang.q;
+      
+      if(isNew) { isAnswered = false; document.getElementById('qt-exp').innerHTML = ""; }
+      
       var optHtml = "";
-      q.options.forEach((o, i) => {
-        optHtml += `<div class="opt" onclick="checkAns(${i}, ${q.ans}, '${q.exp.replace(/'/g,"\\'")}')">${o}</div>`;
+      qLang.options.forEach((o, i) => {
+        var cl = "opt";
+        if(isAnswered){
+            if(i === qFull.ans) cl += " correct";
+        }
+        optHtml += `<div class="${cl}" id="opt-${i}" onclick="checkAns(${i}, ${qFull.ans})">${o}</div>`;
       });
       document.getElementById('qt-opts').innerHTML = optHtml;
-      document.getElementById('qt-exp').innerHTML = "";
+      
+      if(isAnswered){
+          var exp = (curLang === "en") ? qFull.exp_en : qFull.exp_ta;
+          document.getElementById('qt-exp').innerHTML = `<b>Explanation:</b> ${exp} <br><br><button class="btn" style="margin-top:15px; width:100%;" onclick="nextQ()">Next Question</button>`;
+      }
     }
-    function checkAns(sel, ans, exp){
+    
+    function checkAns(sel, ans){
+      if(isAnswered) return;
+      isAnswered = true;
+      
       var opts = document.querySelectorAll('.opt');
-      opts.forEach(o => o.onclick=null);
-      if(sel === ans){ opts[sel].classList.add('correct'); score++; } 
-      else { opts[sel].classList.add('wrong'); opts[ans].classList.add('correct'); }
+      if(sel === ans){
+        document.getElementById('opt-'+sel).classList.add('correct');
+        score++;
+      } else {
+        document.getElementById('opt-'+sel).classList.add('wrong');
+        document.getElementById('opt-'+ans).classList.add('correct');
+      }
+      
+      var qFull = QBANK[curTopic][qIndex];
+      var exp = (curLang === "en") ? qFull.exp_en : qFull.exp_ta;
       document.getElementById('qt-exp').innerHTML = `<b>Explanation:</b> ${exp} <br><br><button class="btn" style="margin-top:15px; width:100%;" onclick="nextQ()">Next Question</button>`;
     }
-    function nextQ(){ qIndex++; showQuestion(); }
+    
+    function nextQ(){
+      qIndex++;
+      isAnswered = false;
+      renderQuestion(true);
+    }
+    
     function endTest(){
+      viewState = "end";
       var qs = QBANK[curTopic];
       var pct = Math.round((score/qs.length)*100);
       var html = `<h2 style="text-align:center; margin-top:30px;">Test Completed!</h2>
                   <p style="text-align:center; font-size:24px; margin:20px 0;">Score: ${score}/${qs.length}</p>`;
       if(pct >= 50){
-        html += `<div style="text-align:center; color:var(--suc); font-weight:800; font-size:20px;">Daily Target Achieved!</div>
-                 <button class="btn" style="width:100%; margin-top:30px;" onclick="markDone()">✓ Save Progress & Exit</button>`;
+        html += `<div style="text-align:center; color:var(--suc); font-weight:800; font-size:20px;">Topic Mastered!</div>
+                 <button class="btn" style="width:100%; margin-top:30px; padding:15px;" onclick="markDone()">✓ Save Progress & Exit</button>`;
       } else {
-        html += `<div style="text-align:center; color:#ef4444; font-weight:800; font-size:20px;">Keep Learning! Need 50% to pass.</div>
-                 <button class="btn" style="width:100%; margin-top:30px;" onclick="startTest()">Retry Test</button>`;
+        html += `<div style="text-align:center; color:#ef4444; font-weight:800; font-size:20px;">Keep Learning!</div>
+                 <button class="btn" style="width:100%; margin-top:30px; padding:15px;" onclick="startTest()">Retry Test</button>`;
       }
       document.getElementById('qt-opts').innerHTML = html;
       document.getElementById('qt-text').innerHTML = "";
       document.getElementById('qt-counter').innerHTML = "";
       document.getElementById('qt-exp').innerHTML = "";
     }
+    
     function markDone(){
       done[curTopic] = true;
-      localStorage.setItem('upscDone3', JSON.stringify(done));
+      localStorage.setItem('upscDone5', JSON.stringify(done));
       updateProgress();
       closeReader();
-    }
-    
-    // SMART TANGLISH AI
-    function sendAI(){
-      var v = document.getElementById('ai-in').value.trim();
-      if(!v) return;
-      document.getElementById('ai-in').value = '';
-      var cb = document.getElementById('cbx');
-      cb.innerHTML += `<div class="msg user">${v}</div>`;
-      cb.scrollTop = cb.scrollHeight;
-      setTimeout(() => replyAI(v), 500);
-    }
-    function replyAI(q){
-      var ql = q.toLowerCase();
-      var rep = "I am a demo AI Mentor. However, try asking me 'eppadi start pandrathu', 'history book', or 'pyq enga irukku'.";
-      
-      // Tanglish & English Smart Keywords
-      if(ql.match(/(start|eppadi|begin|first|mutha)/)){
-        rep = "<b>How to start UPSC:</b><br>1. First, click on the 'Master Roadmap' button on the Home screen.<br>2. Read Class 6-12 NCERTs like a storybook.<br>3. Don't make notes yet.<br>4. Read The Hindu Editorials daily.";
-      } 
-      else if(ql.match(/(book|notes|read|padikanum|history|polity)/)){
-        rep = "<b>Standard Books to follow:</b><br>- Polity: M. Laxmikanth<br>- Modern History: Spectrum<br>- Geography: GC Leong & NCERT 11/12<br>- Economy: Mrunal Notes.<br>Stick to ONE book and revise it 5 times!";
-      }
-      else if(ql.match(/(pdf|pyq|question|paper|assignment)/)){
-        rep = "<b>Free PDFs & Questions:</b><br>Go to the 'Library' tab at the bottom! I have added direct download links for official UPSC PYQ PDFs and NCERT books there.";
-      }
-      else if(ql.match(/(news|hindu|paper)/)){
-        rep = "Read The Hindu editorial page daily. Don't spend more than 45 minutes. Skip sports, local politics, and entertainment.";
-      }
-      else if(ql.match(/(tamil|language|translate)/)){
-        rep = "Yes! When you open any topic in the Syllabus, just click the <b>'A / அ (TA)'</b> button at the top to read the notes in Tamil!";
-      }
-      
-      var cb = document.getElementById('cbx');
-      cb.innerHTML += `<div class="msg bot">${rep}</div>`;
-      cb.scrollTop = cb.scrollHeight;
     }
     
     window.onload = renderApp;
